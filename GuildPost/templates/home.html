@@ -1,0 +1,148 @@
+<!-- /GuildPost/GuildPost/templates/home.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuildPost - Главная</title>
+    {% load static %} <!-- Загрузка библиотеки static -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Подключение CSS -->
+
+    <script src="{% static 'js/scripts.js' %}"></script> <!-- Подключение scripts.js -->
+
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon"> <!-- Подключение иконки сайта -->
+</head>
+<body data-register="{{ register_flag|default:'false' }}" data-theme="light">
+
+    <!-- ***************************************************************************************** -->
+    <!-- Меню -->
+    <div class="menu">
+        {% for item in menu_items %}
+            <!-- Кнопка "Главная" -->
+            {% if item.link == "home" %}
+            <div class="menu-item clickable" data-link="home">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Поиск" -->
+            {% if item.link == "find" %}
+            <div class="menu-item clickable" data-link="find">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Новость" (только для авторизованных пользователей) -->
+            {% if item.link == "news" and user.is_authenticated %}
+            <div class="menu-item clickable" data-link="news">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Темная тема" (только если текущая тема светлая) -->
+            {% if item.link == "dark" %}
+            <div class="menu-item theme-toggle clickable" data-theme="dark">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Светлая тема" (добавляется через JavaScript) -->
+            <!-- Эта кнопка будет сгенерирована клиентским кодом -->
+
+            <!-- Кнопка "Плитка" -->
+            {% if item.link == "grid" %}
+            <div class="menu-item toggle-view-mode clickable" data-mode="grid">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Список" (добавляется через JavaScript) -->
+            <!-- Эта кнопка будет сгенерирована клиентским кодом -->
+        {% endfor %}
+    </div>
+
+
+    <!-- ***************************************************************************************** -->
+
+
+    <!-- ***************************************************************************************** -->
+    <!-- Основной контейнер -->
+    <div class="container">
+        <!-- Левая боковая панель -->
+        <div class="sidebar">
+            <!-- Бокс для логина -->
+            {% csrf_token %}
+
+            <!-- То чем заполняется бокс для логина -->
+            <div class="sidebar-box" id="login-box">
+                {% if user.is_authenticated %}
+                    {% include 'logout.html' %}
+                {% elif request.session.login_error %}
+                    <!-- Если ошибка логина, загружаем форму с ошибкой -->
+                    {% include 'login_error.html' %}
+                {% else %}
+                    {% include 'login.html' %}
+                {% endif %}
+            </div>
+
+
+            <!-- Бокс с категориями новостей -->
+            <div class="sidebar-box" id="categories-box">  <!-- Категории будут загружены сюда через AJAX -->
+            </div>
+            <!-- Бокс с отображением времени -->
+            <!-- Бокс с отображением времени и часовых поясов -->
+            <div class="sidebar-box theme-adaptable" id="time-display-box">
+                <div class="time-display">
+                    <p>Время сервера: <span id="server-time"></span></p>
+                    <p>Часовой пояс сервера: <span id="server-timezone"></span></p>
+                    <p>Время пользователя: <span id="user-time"></span></p>
+                    <p>Часовой пояс пользователя: <span id="user-timezone"></span></p>
+                </div>
+            </div>
+        </div>
+     <!-- ***************************************************************************************** -->
+
+
+    <!-- ***************************************************************************************** -->
+        <!-- Центральная часть -->
+        <div class="main grid">
+
+            <!-- Приветственный бокс -->
+            <div class="welcome-box-container">
+                <div class="welcome-box">
+                    <h2>{{ welcome_box.title }}</h2> <!-- Загружаем заголовок из базы данных -->
+                    <p>{{ welcome_box.description }}</p> <!-- Загружаем описание из базы данных -->
+                </div>
+
+            </div>
+
+
+            <!-- Контейнер в котором загружается динамически весь контент сайта-->
+            <div class="main-box">
+                <div class="articles-container" data-mode>
+                    <div class="placeholder">Центральная часть (в разработке)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="notification" class="notification" style="display: none;"></div>
+    {% if messages %}
+    {% for message in messages %}
+        <script>
+            showNotification("{{ message }}");
+        </script>
+    {% endfor %}
+    {% endif %}
+
+</body>
+</html>

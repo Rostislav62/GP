@@ -1,0 +1,58 @@
+<!-- /GuildPost/posts/templates/posts/ad_form.html -->
+
+{% load static %}
+<script src="{% static 'js/scripts.js' %}"></script>  <!-- Подключаем CSS для стилизации формы -->
+
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">    <!-- Подключение стилей для диалогового окна -->
+
+
+
+<div class="ad-form-container">
+    <!-- Форма для создания или редактирования объявления -->
+    <form id="ad-form" method="POST" enctype="multipart/form-data" data-url="{% url 'create_ad' %}">
+        {% csrf_token %} <!-- Токен защиты от CSRF -->
+
+        <h2>Создать или редактировать объявление</h2>
+
+        <!-- Поле для заголовка объявления -->
+        <div class="form-group">
+            <label for="title">Заголовок</label>
+            <input type="text" id="title" name="title" required placeholder="Введите заголовок">
+        </div>
+
+        <!-- Выпадающий список для выбора категории -->
+        <div class="form-group">
+            <label for="category">Категория</label>
+            <select id="category" name="category" required>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Текстовое поле с поддержкой WYSIWYG-редактора -->
+        <div class="form-group">
+            <label for="content">Текст</label>
+            <textarea id="content" name="content" rows="10" placeholder="Введите текст объявления"></textarea>
+        </div>
+
+        <!-- Поле для загрузки медиафайла -->
+        <div class="form-group">
+            <label for="media_file">Медиафайл</label>
+            <input type="file" id="media_file" name="media_file" accept="image/*,video/*">
+        </div>
+
+        <!-- Кнопки управления -->
+        <div class="form-buttons">
+
+            <button type="button" id="preview-ad" class="button-preview">
+                <i class="fa fa-eye"></i> Предпросмотр
+            </button>
+
+            <button type="button" id="cancel-ad" class="button-cancel">
+                <i class="fa fa-times"></i> Отмена
+            </button>
+        </div>
+    </form>
+</div>

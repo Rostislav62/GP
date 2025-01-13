@@ -1,0 +1,39 @@
+<!-- /GuildPost/GuildPost/templates/logout.html -->
+{% load static %}
+<div class="login-box">
+    <!-- Заголовок с именем пользователя -->
+    <h2>{{ user.username }}</h2>
+    <p>Добро пожаловать в GuildPost!</p>
+
+    <!-- Блок аватара -->
+    <div class="avatar-container">
+        {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="Аватар пользователя">
+        {% else %}
+            <img src="{% static 'pictures/avatar.webp' %}" alt="Аватар по умолчанию">
+        {% endif %}
+    </div>
+
+    <!-- Форма выхода -->
+    <form id="logout-form" method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+
+    <!-- Кнопка для загрузки профиля -->
+    <button id="profile-button" type="button">Профиль</button>
+</div>
+
+<script>
+    // Обработчик клика на кнопку "Профиль"
+    document.getElementById("profile-button").addEventListener("click", function () {
+        fetch("{% url 'profile' %}")  // Запрос к серверу по URL профиля
+            .then(response => response.text())  // Получаем HTML-контент
+            .then(data => {
+                // Вставляем полученный HTML-контент в центральную часть страницы
+                document.querySelector(".main-box").innerHTML = data;
+            })
+            .catch(error => console.error('Ошибка загрузки профиля:', error));
+    });
+</script>
+

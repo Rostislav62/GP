@@ -1,0 +1,56 @@
+<!-- /GuildPost/GuildPost/templates/recovery_code.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Восстановление пароля</title>
+    {% load static %} <!-- Подключаем библиотеку static для работы с файлами -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Подключаем CSS стили -->
+    <script src="{% static 'js/scripts.js' %}"></script> <!-- Подключаем общий файл скриптов -->
+</head>
+<body>
+    <div id="recovery-container">
+        <!-- Основной контейнер для страницы восстановления -->
+        <h1>Введите код восстановления</h1>
+
+            <hr>
+            <!-- Отображение счётчиков -->
+            <p id="attempts-left">У вас осталось еще {{ attempts_left }} попытки для восстановления пароля. Будьте внимательны.</p>
+            <p id="code-validity">Код действителен ещё {{ code_validity_seconds }} секунд.</p>
+
+        <!-- Инструкция для пользователя -->
+            <p>Enter the recovery code that you received in your email and click the restore button.</p>
+            <hr>
+        <form id="recovery-code-form" method="POST">
+            {% csrf_token %}
+            <div style="text-align: center; margin-top: 10px;">
+                <label for="code">Код восстановления:</label>
+                <input type="text" id="code" name="code" placeholder="Enter your recovery code" required>
+                <div style="text-align: center; margin-top: 10px;">
+                    <button type="submit">Подтвердить</button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- Сообщение о блокировке восстановления -->
+        <p id="block-message" style="display: none;">Восстановление пароля временно заблокировано. Попробуйте позже.</p>
+
+        <!-- Кнопка для запроса нового кода -->
+        <button id="request-new-code" style="display: none;">Запросить новый код</button>
+    </div>
+
+    <script>
+        // Инициализация страницы восстановления
+        document.addEventListener("DOMContentLoaded", function () {
+            initRecoveryCodePage(
+                {{ code_validity_seconds }},  // Время действия кода (в секундах)
+                {{ attempts_left }},          // Остаток попыток запроса кода
+                {{ disable_password_recovery|yesno:"true,false" }} // Флаг блокировки восстановления
+            );
+        });
+    </script>
+</body>
+</html>

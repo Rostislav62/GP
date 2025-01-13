@@ -1,0 +1,17 @@
+<!-- /GuildPost/GuildPost/templates/categories.html -->
+<div class="categories-box">
+    <h3>Категории</h3>
+    <ul class="categories-list">
+        {% for category in categories %}
+            <li class="category-item">
+                <!-- Если есть иконка, отображаем её -->
+                {% if category.icon %}
+                    <img src="{{ category.icon.url }}" alt="{{ category.name }}" class="category-icon">
+                {% endif %}
+                <a href="#" class="category-link" data-slug="{{ category.slug }}">
+                    {{ category.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

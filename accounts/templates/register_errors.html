@@ -1,0 +1,25 @@
+<!-- /GuildPost/GuildPost/templates/register_errors.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Errors</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Контейнер для отображения ошибок регистрации -->
+    <div class="error-container">
+        <h1>Registration Errors</h1>
+        <ul>
+            <!-- Вывод списка ошибок -->
+            {% for error in errors %}
+                <li>{{ error }}</li> <!-- Каждая ошибка безопасно отображается -->
+            {% endfor %}
+        </ul>
+        <p>Please check the errors above and try again.</p> <!-- Инструкция -->
+
+    </div>
+</body>
+</html>

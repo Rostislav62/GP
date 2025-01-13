@@ -1,0 +1,807 @@
+/* /GuildPost/static/css/styles.css */
+
+
+/* Светлая и Тёмная тема */
+:root {
+    /* Светлая тема */
+    --box-background-color: rgba(255, 255, 255, 0.8); /* Прозрачно-светлый фон */
+    --box-text-color: #000000; /* Чёрный текст */
+}
+
+[data-theme="dark"] {
+    /* Тёмная тема */
+    --box-background-color: rgba(0, 0, 0, 0.5); /* Прозрачно-тёмный фон */
+    --box-text-color: #ffffff; /* Белый текст */
+}
+
+
+
+/* Общий стиль для всего документа */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-size: cover; /* Растягиваем изображение, чтобы оно покрывало всю страницу */
+    background-position: center; /* Центрируем изображение */
+    background-repeat: no-repeat; /* Отключаем повторение изображения */
+    background-attachment: fixed; /* Фон остаётся неподвижным при прокрутке */
+    transition: filter 0.3s ease; /* Плавный переход при смене темы */
+}
+
+/* Темная тема */
+body[data-theme="dark"] {
+    filter: brightness(0.7); /* Затемняет фон на 70% */
+    background-image: url('/static/pictures/portal_dark.jpg'); /* Указываем абсолютный путь */
+}
+
+/* Светлая тема */
+body[data-theme="light"] {
+    filter: brightness(1.2); /* Осветляет фон на 120% */
+    background-image: url('/static/pictures/portal_light.jpg'); /* Указываем абсолютный путь */
+}
+
+
+
+
+/* Контейнер для основной структуры */
+.container {
+    position: absolute; /* Позволяет наложить меню поверх баннера */
+    top: 1.3cm; /* Отступ сверху, чтобы меню находилось внизу баннера */
+    margin-top: 20px; /* Отступ сверху, чтобы сместить контейнер на 20 пикселей */
+    display: flex; /* Сохраняем текущую флекс-вёрстку, если она есть */
+    margin-left: 10%; /* Если это уже прописано, оставляем */
+    margin-right: 10%; /* Если это уже прописано, оставляем */
+}
+
+
+
+/* ************************************************************************/
+/* Левая боковая панель */
+.sidebar {
+    width: 20%; /* Ширина боковой панели */
+    padding: 15px;
+    box-sizing: border-box; /* Учитываем отступы */
+}
+
+/* Стили для ссылок на боковой панели */
+.sidebar a {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: var(--link-color); /* Цвет ссылки зависит от темы */
+    transition: color 0.3s ease; /* Плавный переход цвета */
+}
+
+/* Стили для светлой темы */
+body[data-theme="light"] .sidebar a {
+    color: black; /* Чёрный цвет текста */
+}
+
+/* Стили для тёмной темы */
+body[data-theme="dark"] .sidebar a {
+    color: white; /* Белый цвет текста */
+}
+
+/* Убираем изменение цвета при наведении */
+.sidebar a:hover,
+.sidebar a:active,
+.sidebar a:focus {
+ color: inherit; /* Оставляем цвет таким же, как у ссылки по умолчанию */
+}
+
+
+
+/* Общий стиль для боксов на боковой панели */
+.sidebar-box {
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+    display: flex;
+    justify-content: center; /* Центрирование содержимого */
+    align-items: center;
+    min-height: 100px; /* Минимальная высота */
+
+}
+
+.sidebar-box .placeholder {
+    font-size: 1rem;
+    font-color: white;
+    color: #666;
+}
+
+
+/* ****************************Бокс для логина*******************  */
+
+/* Текст приветствия */
+.welcome-text {
+    margin-top: 10px;
+    margin-bottom: 2px; /* Минимальное расстояние между строками */
+    font-size: 1rem; /* Стандартный размер текста */
+    line-height: 1.2; /* Уменьшенное расстояние между строками */
+}
+
+/* Текст инструкции */
+.instruction-text {
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4; /* Увеличенное для читаемости */
+}
+
+/* Аватар */
+.avatar-container {
+    display: flex;
+    justify-content: center; /* Центрирование аватара */
+    margin-bottom: 10px;
+}
+
+.avatar-container img {
+    width: 100px; /* Размер аватара */
+    height: 100px; /* Размер аватара */
+    border-radius: 10px; /* Закругленные углы */
+    object-fit: cover; /* Подгонка изображения */
+    border: 2px solid #ccc; /* Граница вокруг аватара */
+}
+
+
+/* ****************************Контейнер для формы логина*******************  */
+/* Контейнер для формы логина */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 42vh;
+    background-color: #f4f4f4;
+}
+
+/* Кнопка Войти */
+.login-button {
+    display: inline-block; /* Автоматический размер по содержимому */
+    padding: 5px 10px; /* Внутренние отступы */
+    background-color: #007bff; /* Цвет фона */
+    color: white; /* Цвет текста */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Цвет при наведении */
+}
+
+/* Стили для ссылок в login-box и categories-box */
+#login-box a,
+#categories-box a {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: var(--link-color); /* Цвет ссылки зависит от темы */
+    transition: color 0.3s ease, transform 0.3s ease; /* Плавный переход цвета и масштаба */
+    display: inline-block; /* Устанавливаем блочный контекст для transform */
+}
+
+/* Стили для светлой темы */
+body[data-theme="light"] #login-box a,
+body[data-theme="light"] #categories-box a {
+    color: black; /* Чёрный цвет текста */
+}
+
+/* Стили для тёмной темы */
+body[data-theme="dark"] #login-box a,
+body[data-theme="dark"] #categories-box a {
+    color: white; /* Белый цвет текста */
+}
+
+/* Эффект увеличения при наведении */
+#login-box a:hover,
+#categories-box a:hover {
+    transform: scale(1.1); /* Увеличиваем текст до 110% */
+    color: inherit; /* Цвет остаётся неизменным */
+}
+
+/* Убираем изменение цвета и трансформации при активации */
+#login-box a:active,
+#login-box a:focus,
+#categories-box a:active,
+#categories-box a:focus {
+    transform: scale(1); /* Возвращаем исходный размер */
+    color: inherit; /* Цвет остаётся неизменным */
+}
+
+
+
+/* ****************************Центральная часть*******************  */
+/* Центральная часть */
+.main {
+    width: 80%; /* Ширина основной части */
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+
+.main-box {
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход при смене темы */
+
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для визуального выделения */
+    display: flex; /* Включаем Flexbox */
+     /*justify-content: center; Центрирование содержимого */
+    flex-direction: column; /* Устанавливаем главную ось вертикально */
+    justify-content: flex-start; /* Выравнивание по верхнему краю */
+    justify-content: flex-start; /* Выравнивание по верхнему краю */
+    align-items: center;
+    min-height: 200px; /* Минимальная высота */
+    transition: all 0.3s ease; /* Плавный переход размеров */
+    max-height: 65vh; /* Устанавливаем максимальную высоту относительно окна */
+    overflow: auto; /* Включаем скроллирование, если содержимое превышает высоту */
+}
+
+
+/* ****************************Контейнер для приветственного бокса*******************  */
+
+/* Контейнер для приветственного бокса */
+.welcome-box-container {
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход при смене темы */
+
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень для визуального выделения */
+    display: flex;
+    justify-content: center; /* Центрирование содержимого */
+    align-items: center;
+    min-height: 80px; /* Минимальная высота */
+     /*transition: all 0.3s ease; Плавный переход размеров */
+    margin-bottom: 20px; /* Отступ от основной части */
+}
+
+/* Стили для приветственного бокса */
+.welcome-box {
+    border-radius: 8px;
+    text-align: center; /* Центрируем текст */
+    font-family: Arial, sans-serif; /* Шрифт */
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход при смене темы */
+}
+
+
+
+/* Стиль для формы с ошибкой */
+.error-message {
+  color: red;
+  font-size: 16px;
+  background-color: rgba(255, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+
+/* Стили для страницы активации */
+.activation-result {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.activation-title {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.activation-message {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+
+/* Стили для статей */
+
+/* Основной стиль для контейнера статей */
+.articles-container {
+    gap: 20px;
+    padding: 20px;
+    /* background-color: var(--box-background-color);/*  Фон зависит от темы */
+    background-color: rgba(255, 255, 255, 0); /*  Прозрачный фон */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход при смене темы */
+
+}
+
+
+/* Режим плитки */
+.main.grid .articles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Режим списка */
+.main.list .articles-container {
+    display: block;
+}
+
+
+.article {
+    background-color: var(--box-background-color);/*  Фон зависит от темы */
+    color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход при смене темы */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.article:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.article-header {
+    display: flex; /* Включаем Flexbox */
+    justify-content: space-between; /* Размещаем заголовок и кнопку по краям */
+    align-items: center; /* Центрируем по вертикали */
+    width: 100%; /* Гарантируем, что элементы занимают всю ширину контейнера */
+    margin-bottom: 20px; /* Отступ снизу */
+    margin-top: 20px; /* Отступ  */
+    margin-left: 20px; /* Отступ  */
+    margin-right: 20px; /* Отступ  */
+    padding: 0; /* Убираем возможные лишние внутренние отступы */
+    gap: 0; /* Минимальное пространство между элементами (можно увеличить при необходимости) */
+}
+
+.author-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.author-info {
+    flex-grow: 1;
+}
+
+.author-name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.category {
+    font-size: 12px;
+    color: #888;
+}
+
+.btn-follow {
+
+    margin-right: 30px; /* Отступ  */
+    padding: 8px 16px; /* Добавляем внутренние отступы для кнопки */
+    background-color: #007bff; /* Цвет фона */
+    color: white; /* Цвет текста */
+    border: none; /* Убираем границы */
+    border-radius: 5px; /* Скругляем углы */
+    cursor: pointer; /* Указатель мыши "рука" */
+    text-align: center; /* Центрирование текста внутри кнопки */
+}
+
+
+
+.btn-follow:hover {
+    background-color: #0056b3;
+}
+
+
+.article-content {
+    padding: 10px;
+}
+
+
+.article-title {
+    font-size: 24px; /* Размер заголовка */
+    font-weight: bold; /* Жирный текст */
+    margin: 0; /* Убираем стандартные отступы */
+    text-align: left; /* Выравниваем заголовок по левому краю */
+}
+
+.article-preview {
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+/* Общий стиль для article-media */
+.article-media {
+    max-width: 50%;
+    height: auto;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 10px; /* Добавляем округление углов */
+    transition: border 0.3s ease, box-shadow 0.3s ease; /* Плавный переход для обводки */
+}
+
+/* Тёмная тема */
+body[data-theme="dark"] .article-media {
+    /*border: 1px solid #ffffff;  Тонкая белая обводка */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 1); /* Лёгкая подсветка */
+}
+
+/* Светлая тема (по умолчанию, без обводки) */
+body[data-theme="light"] .article-media {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1); /* Лёгкая подсветка */
+}
+
+
+
+.media-container {
+    display: flex; /* Включаем Flexbox */
+    justify-content: center; /* Горизонтальное выравнивание */
+}
+
+
+.article-footer {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.btn-like, .btn-comment, .btn-views {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 16px;
+}
+
+.btn-like:hover, .btn-comment:hover, .btn-views:hover {
+    color: #000;
+}
+
+/* Стили для кликабельных элементов */
+.clickable {
+    cursor: pointer; /* Курсор становится "пальчиком" */
+    text-decoration: underline; /* Добавляет подчёркивание для визуальной подсказки */
+}
+
+/* Центрирование медиафайлов */
+.article-image, .article-video {
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* ********************************************************************************/
+/* Стили для меню */
+.menu {
+    display: flex;
+    position: absolute; /* Позволяет наложить меню поверх баннера */
+    top: 0.5cm; /* Отступ сверху, чтобы меню находилось внизу баннера */
+    width: 80%; /* Ширина меню такая же, как у баннера */
+    left: 50%; /* Центрирование меню */
+    transform: translateX(-50%); /* Центрирование по горизонтали */
+    background-color: rgba(0, 0, 0, 0); /* Прозрачный чёрный фон */
+    justify-content: left; /* Выравниваем элементы по левому краю */
+    align-items: left;
+    padding: 10px 0; /* Внутренние отступы */
+    border-radius: 5px; /* Скругление углов */
+    gap: 15px;
+    text-align: center; /* Центрирование текста */
+}
+
+
+/* Общий стиль для кнопок верхнего меню*/
+.menu-item {
+    display: flex; /* Устанавливаем кнопки в строку */
+    align-items: center; /* Выравниваем содержимое по вертикали */
+    justify-content: center; /* Центрируем содержимое */
+    text-align: left; /* Гарантируем выравнивание текста по левому краю */
+    font-size: 20px;
+    padding: 5px 5px; /* Добавляем отступы внутри кнопок */
+    border-radius: 5px; /* Скругляем углы */
+    /*background-color: var(--box-background-color); /* Фон зависит от темы */
+    background-color: rgba(0, 0, 0, 0); /* Прозрачный чёрный фон */
+    color: white;
+    /* color: var(--box-text-color); /* Текст зависит от темы */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавный переход при наведении */
+    /*background-color: rgba(0, 0, 0, 0);  Прозрачный чёрный фон */
+    /*color: #d3d3d3;  Светло-серый текст */
+
+    cursor: pointer; /* Курсор "рука" */
+    white-space: nowrap;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Стиль при наведении */
+.menu-item:hover {
+    background-color: rgba(0, 123, 255, 0.3); /* Прозрачно-синий фон */
+    color: #ffffff; /* Белый текст */
+    transform: scale(1.05); /* Лёгкое увеличение для эффекта */
+}
+
+
+
+.menu-item i {
+    font-size: 20px;
+    margin-right: 8px;
+    transition: color 0.3s ease;
+}
+
+.menu-item:first-child {
+    margin-left: 80px; /* Отступ только для первой кнопки */
+}
+
+
+/* Стили для формы комментария */
+#add-comment-form {
+    display: flex; /* Используем Flexbox для управления содержимым */
+    flex-direction: column; /* Располагаем элементы формы по вертикали */
+    align-items: stretch; /* Растягиваем дочерние элементы на всю ширину */
+    width: 100%; /* Устанавливаем ширину формы в 100% */
+    gap: 10px; /* Добавляем расстояние между элементами формы */
+}
+
+/* Стили для текстовой области */
+#add-comment-form textarea {
+    width: 100%; /* Растягиваем текстовую область на всю ширину формы */
+    resize: vertical; /* Позволяем пользователю изменять только высоту */
+    padding: 10px; /* Внутренние отступы для удобства ввода текста */
+    border: 1px solid #ccc; /* Светлая граница вокруг текстовой области */
+    border-radius: 5px; /* Скругляем углы */
+    font-size: 1rem; /* Устанавливаем размер текста */
+    box-sizing: border-box; /* Учитываем отступы в общей ширине */
+    transition: border-color 0.3s ease; /* Плавный переход цвета границы при фокусе */
+}
+
+/* Стили при фокусе на текстовой области */
+#add-comment-form textarea:focus {
+    border-color: #007bff; /* Меняем цвет границы на синий при фокусе */
+    outline: none; /* Убираем стандартную обводку браузера */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Лёгкая подсветка */
+}
+
+
+
+/* Стили для кнопки отправки комментария */
+#add-comment-form button[type="submit"] {
+    display: flex; /* Используем Flexbox для размещения текста и иконки */
+    align-items: center; /* Выравниваем содержимое по вертикали */
+    justify-content: flex-start; /* Прижимаем содержимое к левому краю */
+    padding: 5px 10px; /* Внутренние отступы: 5px сверху/снизу и 10px слева/справа */
+    background-color: #007bff; /* Синий цвет фона */
+    color: white; /* Белый цвет текста */
+    border: none; /* Убираем стандартные границы */
+    border-radius: 5px; /* Скругляем углы */
+    cursor: pointer; /* Указатель мыши "рука" */
+    font-size: 1rem; /* Размер шрифта */
+    white-space: nowrap; /* Запрещаем перенос текста на новую строку */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень для кнопки */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавный переход для эффектов */
+    width: 215px; /* Длина кнопки зависит от содержимого */
+}
+
+/* Иконка внутри кнопки */
+#add-comment-form button[type="submit"] i {
+    margin-right: 8px; /* Отступ между иконкой и текстом */
+    font-size: 1rem; /* Размер иконки */
+}
+
+/* Эффект при наведении */
+#add-comment-form button[type="submit"]:hover {
+    background-color: #0056b3; /* Более тёмный синий цвет при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение кнопки */
+}
+
+/* Эффект при нажатии */
+#add-comment-form button[type="submit"]:active {
+    transform: scale(0.95); /* Уменьшение кнопки при нажатии */
+}
+
+
+
+/* Контейнер для всех комментариев */
+.comments-container {
+    width: 100%; /* Устанавливает ширину родительского контейнера */
+    display: flex; /* Flexbox для вертикального размещения */
+    flex-direction: column; /* Комментарии размещаются один под другим */
+    gap: 15px; /* Расстояние между комментариями */
+    padding: 10px; /* Внутренние отступы контейнера */
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Цвет текста зависит от темы */
+    border-radius: 5px; /* Скругляем углы */
+    box-sizing: border-box; /* Учитываем padding */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Плавный переход */
+}
+
+
+.comment-block {
+    width: 100%; /* Гарантирует, что каждый комментарий занимает всю ширину */
+    padding: 10px; /* Внутренние отступы */
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Лёгкая граница */
+    border-radius: 5px; /* Скругляем углы */
+    background-color: var(--box-background-color); /* Зависимость фона от темы */
+    color: var(--box-text-color); /* Зависимость цвета текста от темы */
+    box-sizing: border-box; /* Учитывает padding */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Плавный переход */
+}
+
+/* Стили для тёмной темы */
+body[data-theme="dark"] .comment-block {
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Светлая граница для тёмной темы */
+}
+
+
+
+
+/* Кнопка "Лайк" */
+.like-button {
+    display: inline-flex; /* Автоматическая ширина по содержимому */
+    align-items: center; /* Центрируем содержимое по вертикали */
+    gap: 5px; /* Отступ между текстом и иконкой */
+    background-color: #007bff; /* Синий фон */
+    color: white; /* Белый текст */
+    border: none; /* Убираем стандартную границу */
+    border-radius: 5px; /* Скругляем углы */
+    padding: 5px 10px; /* Внутренние отступы */
+    cursor: pointer; /* Указатель мыши "рука" */
+    font-size: 1rem; /* Размер текста */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Плавные эффекты */
+}
+
+/* Эффект при наведении на кнопку */
+.like-button:hover {
+    background-color: #0056b3; /* Более тёмный синий цвет */
+    transform: scale(1.05); /* Лёгкое увеличение кнопки */
+}
+
+/* Стили для текстовой области */
+textarea[name="comment"] {
+    background-color: var(--box-background-color); /* Фон зависит от темы */
+    color: var(--box-text-color); /* Цвет текста зависит от темы */
+    border: 1px solid rgba(0, 0, 0, 0.3); /* Полупрозрачная граница */
+    padding: 10px; /* Внутренние отступы для удобства */
+    border-radius: 5px; /* Скругляем углы */
+    font-size: 1rem; /* Размер текста */
+    box-sizing: border-box; /* Учитываем отступы в ширине */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Плавные переходы */
+}
+
+/* Стили для текстовой области в тёмной теме */
+body[data-theme="dark"] textarea[name="comment"] {
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Полупрозрачная светлая граница */
+}
+
+/* Стили при фокусе на текстовой области */
+textarea[name="comment"]:focus {
+    outline: none; /* Убираем стандартную обводку браузера */
+    border-color: rgba(0, 123, 255, 0.8); /* Полупрозрачная синяя граница */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Лёгкая синяя подсветка */
+}
+
+/* Стили при фокусе в тёмной теме */
+body[data-theme="dark"] textarea[name="comment"]:focus {
+    border-color: rgba(128, 189, 255, 0.8); /* Полупрозрачная светло-синяя граница */
+    box-shadow: 0 0 5px rgba(128, 189, 255, 0.5); /* Светло-синяя подсветка */
+}
+
+
+
+// *******************************************************************************************
+//                          Стили для формы создания и редактирования объявления
+// *******************************************************************************************
+
+/* Контейнер формы */
+.ad-form-container {
+    margin: 20px auto; /* Центрируем форму и добавляем отступы сверху и снизу */
+    max-width: 600px; /* Максимальная ширина формы */
+    background-color: #f9f9f9; /* Цвет фона формы */
+    padding: 20px; /* Внутренние отступы внутри формы */
+    border-radius: 10px; /* Скруглённые углы для плавного вида */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Лёгкая тень для выделения формы */
+}
+
+/* Заголовок формы */
+.ad-form-container h2 {
+    text-align: center; /* Центрируем текст заголовка */
+    margin-bottom: 20px; /* Отступ снизу для разделения с полями формы */
+    font-size: 24px; /* Размер текста заголовка */
+    color: #333; /* Тёмный цвет текста для контраста */
+}
+
+/* Группы элементов формы (заголовок, категория, текст, медиафайл) */
+.form-group {
+    margin-bottom: 15px; /* Отступы между группами элементов формы */
+}
+
+.form-group label {
+    display: block; /* Размещаем текст метки на отдельной строке */
+    margin-bottom: 5px; /* Отступ снизу метки для разделения с полем ввода */
+    font-size: 14px; /* Размер текста метки */
+    font-weight: bold; /* Выделяем текст метки жирным */
+    color: #555; /* Цвет текста метки */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%; /* Поля занимают всю ширину контейнера */
+    padding: 10px; /* Внутренние отступы для удобства ввода */
+    border: 1px solid #ccc; /* Граница вокруг полей */
+    border-radius: 5px; /* Скруглённые углы для плавного вида */
+    font-size: 14px; /* Размер текста внутри полей */
+    background-color: #fff; /* Цвет фона полей */
+    box-sizing: border-box; /* Учитываем отступы внутри ширины */
+}
+
+.form-group textarea {
+    resize: vertical; /* Ограничиваем возможность изменения размера поля только по вертикали */
+}
+
+/* Блок кнопок */
+.form-buttons {
+    text-align: center; /* Центрируем кнопки внутри блока */
+    margin-top: 20px; /* Отступ сверху для разделения с полями формы */
+}
+
+.form-buttons button {
+    margin: 5px; /* Отступ между кнопками */
+    padding: 10px 20px; /* Внутренние отступы для увеличения кликабельной области */
+    font-size: 14px; /* Размер текста на кнопках */
+    border: none; /* Убираем стандартную границу */
+    border-radius: 5px; /* Скруглённые углы кнопок */
+    color: #fff; /* Белый цвет текста */
+    cursor: pointer; /* Указатель мыши при наведении */
+    display: inline-flex; /* Используем flex для размещения текста и иконки */
+    align-items: center; /* Центрируем иконку и текст по вертикали */
+    gap: 8px; /* Расстояние между иконкой и текстом */
+}
+
+/* Цвета и стили для кнопок */
+.button-save {
+    background-color: #28a745; /* Зелёный цвет для кнопки "Сохранить" */
+}
+
+.button-preview {
+    background-color: #007bff; /* Синий цвет для кнопки "Предпросмотр" */
+}
+
+.button-cancel {
+    background-color: #dc3545; /* Красный цвет для кнопки "Отмена" */
+}
+
+.button-save:hover {
+    background-color: #218838; /* Более тёмный оттенок зелёного при наведении */
+}
+
+.button-preview:hover {
+    background-color: #0056b3; /* Более тёмный оттенок синего при наведении */
+}
+
+.button-cancel:hover {
+    background-color: #c82333; /* Более тёмный оттенок красного при наведении */
+}
+
+/* Стили для иконок на кнопках */
+.button-save i,
+.button-preview i,
+.button-cancel i {
+    font-size: 16px; /* Размер иконки на кнопке */
+}
+
+
+/* Убедимся, что модальное окно SweetAlert2 отображается поверх всех элементов */
+/* Принудительное исправление для SweetAlert2 */
+.swal2-container {
+    z-index: 2147483647 !important; /* Максимально высокий z-index */
+}
+

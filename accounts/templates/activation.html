@@ -1,0 +1,18 @@
+
+
+<!-- /GuildPost/GuildPost/templates/activation.html -->
+<div class="activation-box">
+    <h1>Активация аккаунта</h1>
+    <p>Вам на почту было отправлено письмо с кодом активации.</p>
+    <p>Введите код в бокс ниже и нажмите кнопку "Активировать".</p>
+
+    <!-- Ошибки активации -->
+    <div id="activation-errors" style="color: red;"></div>
+
+    <form id="activation-form" method="POST" action="/activate/">
+        {% csrf_token %}
+        <label for="activation_code">Код активации:</label>
+        <input type="text" id="activation_code" name="activation_code" placeholder="Введите код" required>
+        <button type="submit">Активировать</button>
+    </form>
+</div>

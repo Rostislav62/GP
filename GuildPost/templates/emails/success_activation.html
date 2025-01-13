@@ -1,0 +1,19 @@
+<!-- /GuildPost/GuildPost/templates/success_activation.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activation Successful</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="activation-success-container">
+        <h1>Account Activated Successfully</h1>
+        <p>Congratulations, {{ user.username }}!</p> <!-- Приветствие -->
+        <p>Your account has been activated. You can now log in.</p> <!-- Информация об успешной активации -->
+        <a href="/login/" class="login-link">Go to Login</a> <!-- Ссылка на форму входа -->
+    </div>
+</body>
+</html>

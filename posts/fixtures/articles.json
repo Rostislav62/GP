@@ -1,0 +1,77 @@
+[
+    {
+        "model": "posts.article",
+        "pk": 1,
+        "fields": {
+            "title": "Как выбрать лучшего танка?",
+            "content": "Танки играют ключевую роль в любой MMORPG. Узнайте, как правильно выбрать танка для рейдов и PvP.",
+            "category": 1,
+            "author": 1,
+            "created_at": "2024-12-01T10:00:00Z",
+            "updated_at": "2024-12-01T10:00:00Z",
+            "views_count": 100,
+            "likes_count": 25,
+            "media_file": null
+        }
+    },
+    {
+        "model": "posts.article",
+        "pk": 2,
+        "fields": {
+            "title": "Хилы: ваше спасение в бою",
+            "content": "Почему роль хилов так важна? Советы по эффективной игре за хила.",
+            "category": 2,
+            "author": 1,
+            "created_at": "2024-12-02T11:00:00Z",
+            "updated_at": "2024-12-02T11:00:00Z",
+            "views_count": 200,
+            "likes_count": 50,
+            "media_file": null
+        }
+    },
+    {
+        "model": "posts.article",
+        "pk": 3,
+        "fields": {
+            "title": "Лучшие заклинания для мастеров магии",
+            "content": "Маги и заклинатели обладают мощными заклинаниями. Узнайте, какие из них лучше использовать.",
+            "category": 10,
+            "author": 1,
+            "created_at": "2024-12-03T12:00:00Z",
+            "updated_at": "2024-12-03T12:00:00Z",
+            "views_count": 300,
+            "likes_count": 75,
+            "media_file": null
+        }
+    },
+    {
+        "model": "posts.article",
+        "pk": 4,
+        "fields": {
+            "title": "Торговцы и секреты успешной торговли",
+            "content": "Узнайте, как стать успешным торговцем в вашей MMORPG. Советы и секреты.",
+            "category": 4,
+            "author": 1,
+            "created_at": "2024-12-04T13:00:00Z",
+            "updated_at": "2024-12-04T13:00:00Z",
+            "views_count": 150,
+            "likes_count": 30,
+            "media_file": null
+        }
+    },
+    {
+        "model": "posts.article",
+        "pk": 5,
+        "fields": {
+            "title": "Кузнецы: создание легендарного оружия",
+            "content": "Хотите создавать легендарное оружие? Кузнецы играют ключевую роль в любой MMORPG.",
+            "category": 7,
+            "author": 1,
+            "created_at": "2024-12-05T14:00:00Z",
+            "updated_at": "2024-12-05T14:00:00Z",
+            "views_count": 120,
+            "likes_count": 40,
+            "media_file": null
+        }
+    }
+]

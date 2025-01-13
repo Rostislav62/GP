@@ -1,0 +1,104 @@
+<!-- /GuildPost/posts/templates/posts/article_detail.html -->
+{% load static %}
+<div class="article-detail">
+    <!-- Заголовок статьи и  Кнопка "Подписаться" -->
+    <div class="article-header">
+        <div class="author-avatar">
+            {% if article.author.profile.avatar %}
+                <img src="{{ article.author.profile.avatar.url }}" alt="Avatar">
+            {% else %}
+                <img src="{% static 'pictures/avatar.webp' %}" alt="Default Avatar">
+            {% endif %}
+        </div>
+        <div class="author-info">
+            <p class="author-name">{{ article.author.first_name }} {{ article.author.last_name }}</p>
+            <p class="category">{{ article.category.name }}</p>
+        </div>
+
+
+        <table style="width: 100%;">
+            <tr>
+                <!-- Левая колонка: Заголовок -->
+                <td style="text-align: left; vertical-align: middle;">
+                    <h1 class="article-title">{{ article.title }}</h1>
+                </td>
+                <!-- Правая колонка: Кнопка -->
+                <td style="text-align: right; vertical-align: middle;">
+                    <button class="btn-follow">Подписаться</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    <!-- Полный текст статьи -->
+    <p>{{ article.content }}</p>
+
+    <!-- Медиафайл: изображение или видео -->
+    <div class="media-container">
+        {% if article.media_file %}
+            {% if media_type == 'image' %}
+                <img src="{{ article.media_file.url }}" alt="Article Media" class="article-media">
+            {% elif media_type == 'video' %}
+                <video src="{{ article.media_file.url }}" controls class="article-media"></video>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div>
+
+    </div>
+    <!-- Лайки, комментарии, просмотры -->
+    <div>
+        <button class="btn-views">👁️ Просмотры: {{ article.views_count }}</button>
+        <button class="btn-like">👍 Лайк  {{ article.likes_count }}</button>
+        <button class="btn-comment clickable" data-url="{% url 'all_comments' article.id %}">
+    💬       Комментарии: {{ article.comments.count }}
+        </button>
+
+
+    </div>
+
+    {% if user.is_authenticated and user == article.author %}
+    <!-- Кнопка "Редактировать" для автора поста -->
+    <button class="menu-item clickable edit-article"
+            data-article-id="{{ article.id }}"
+            data-url="{% url 'edit_ad' article.id %}">
+        Редактировать
+    </button>
+    {% endif %}
+
+    <!-- Последний комментарий -->
+    {% if latest_comment %}
+        <h3 id="latest-comment" class="comment-preview clickable" data-url="{% url 'all_comments' article.id %}">
+            Последний комментарий: <strong>{{ latest_comment.author.username }}</strong> -
+            {{ latest_comment.updated_at|default:latest_comment.created_at|date:"d M Y H:i" }}
+        </h3>
+        <p class="clickable" data-url="{% url 'all_comments' article.id %}">
+            {{ latest_comment.content|truncatewords:15 }} <!-- Текст обрезается до 15 слов -->
+        </p>
+    {% else %}
+        <p>Комментариев пока нет.</p> <!-- Текст, отображаемый при отсутствии комментариев -->
+    {% endif %}
+
+
+
+    <!-- Форма добавления комментария -->
+
+    {% if user.is_authenticated %}
+        <form id="add-comment-form" method="POST" data-url="{% url 'add_comment' article.id %}">
+            {% csrf_token %}
+            <textarea name="comment" rows="3" placeholder="Напишите комментарий..."></textarea>
+            <button type="submit">
+                <i class="fas fa-paper-plane"></i> Добавить комментарий
+            </button>
+        </form>
+    {% else %}
+        <p>Пожалуйста, <a href="{% url 'login' %}">войдите в систему</a>, чтобы оставить комментарий.</p>
+    {% endif %}
+
+
+
+    </form>
+</div>
+
+

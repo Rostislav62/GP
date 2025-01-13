@@ -1,0 +1,36 @@
+<!-- /GuildPost/GuildPost/templates/login.html -->
+
+{% load static %}
+<div class="login-box">
+    <h2>Авторизация</h2>
+    <hr> <!-- Горизонтальная линия под заголовком -->
+
+    <!-- Текст приветствия -->
+    <p class="welcome-text">
+        Приветствуем тебя, <br>
+        <strong>Искатель Приключений!</strong>
+    </p>
+    <p class="instruction-text">
+        Пожалуйста, <br>
+        зарегистрируйтесь или авторизуйтесь!
+    </p>
+    <hr> <!-- Вторая горизонтальная линия -->
+
+    <!-- Блок аватара -->
+    <div class="avatar-container">
+        <img src="{% static 'pictures/avatar.webp' %}" alt="Аватар пользователя">
+    </div>
+    <hr>
+
+    <!-- Форма логина -->
+    <form id="login-form" method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Логин" required>
+        <input type="password" name="password" placeholder="Пароль" required>
+        <button type="submit" class="login-button">Войти</button>
+    </form>
+
+    <!-- Ссылки -->
+    <a href="#" id="forgot-password-link">Забыл пароль?</a> |
+    <a href="#" id="registration-link">Регистрация</a>
+</div>

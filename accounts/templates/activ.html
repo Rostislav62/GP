@@ -1,0 +1,11 @@
+<!-- /GuildPost/GuildPost/templates/activ.html -->
+<div class="activation-result">
+    {% if success %}
+        <h1 class="activation-title">Поздравляем, {{ first_name }} {{ last_name }}!</h1>
+        <p class="activation-message">Ваш аккаунт успешно активирован.</p>
+        <p class="activation-message">Теперь вы можете войти в систему, используя ваш логин и пароль.</p>
+    {% else %}
+        <h1 class="activation-title">Активация не удалась !</h1>
+        <p class="activation-message">{{ message }}</p>
+    {% endif %}
+</div>

@@ -1,0 +1,97 @@
+<!-- /GuildPost/GuildPost/templates/profile.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <!-- Стили для страницы профиля -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Заголовок страницы -->
+        <h1>Профиль пользователя</h1>
+
+        <!-- Аватар пользователя -->
+        <!-- Контейнер для аватара с применением стилей из styles.css -->
+        <div class="avatar-container">
+            {% if user.profile.avatar %}
+                <!-- Аватар пользователя -->
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар пользователя">
+            {% else %}
+                <!-- Аватар по умолчанию -->
+                <img src="{% static 'pictures/avatar.webp' %}" alt="Аватар по умолчанию">
+            {% endif %}
+        </div>
+
+
+        <!-- Основная информация о пользователе -->
+        <div class="profile-info">
+            <!-- Имя и фамилия пользователя -->
+            <p><strong>Имя и фамилия:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+
+            <!-- Имя пользователя -->
+            <p><strong>Логин:</strong> {{ user.username }}</p>
+
+            <!-- Электронная почта -->
+            <p><strong>Email:</strong> {{ user.email }}</p>
+
+            <!-- Дата рождения -->
+            {% if user.profile.birth_date %}
+                <p><strong>Дата рождения:</strong> {{ user.profile.birth_date }}</p>
+            {% else %}
+                <p><strong>Дата рождения:</strong> Не указана</p>
+            {% endif %}
+
+            <!-- Дата регистрации -->
+            <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y H:i" }}</p>
+
+            <!-- Дата последнего входа -->
+            {% if user.last_login %}
+                <p><strong>Последний вход:</strong> {{ user.last_login|date:"d.m.Y H:i" }}</p>
+            {% else %}
+                <p><strong>Последний вход:</strong> Никогда</p>
+            {% endif %}
+
+            <!-- Пол пользователя -->
+            <p>
+                <strong>Пол:</strong>
+                {% if user.profile.gender == "male" %}
+                    Мужской
+                {% elif user.profile.gender == "female" %}
+                    Женский
+                {% else %}
+                    Другой
+                {% endif %}
+            </p>
+
+            <!-- Подписка на рассылку -->
+            <p>
+                <strong>Подписка на рассылку:</strong>
+                {% if user.profile.subscribe %}
+                    Подписан
+                {% else %}
+                    Не подписан
+                {% endif %}
+            </p>
+
+            <!-- Принятие политики конфиденциальности -->
+            <p>
+                <strong>Политика конфиденциальности принята:</strong>
+                {% if user.profile.privacy_policy_accepted %}
+                    Да
+                {% else %}
+                    Нет
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Ссылка для возврата на главную страницу -->
+        <div class="back-to-home">
+            <a href="{% url 'home' %}">На главную</a>
+        </div>
+    </div>
+</body>
+</html>

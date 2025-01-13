@@ -1,0 +1,52 @@
+[
+    {
+        "model": "GuildPost.menuitem",
+        "pk": 1,
+        "fields": {
+            "name": "Меню 1",
+            "link": "/menu1/",
+            "icon": "icon-menu1",
+            "order": 1
+        }
+    },
+    {
+        "model": "GuildPost.menuitem",
+        "pk": 2,
+        "fields": {
+            "name": "Меню 2",
+            "link": "/menu2/",
+            "icon": "icon-menu2",
+            "order": 2
+        }
+    },
+    {
+        "model": "GuildPost.menuitem",
+        "pk": 3,
+        "fields": {
+            "name": "Меню 3",
+            "link": "/menu3/",
+            "icon": "icon-menu3",
+            "order": 3
+        }
+    },
+    {
+        "model": "GuildPost.menuitem",
+        "pk": 4,
+        "fields": {
+            "name": "Меню 4",
+            "link": "/menu4/",
+            "icon": "icon-menu4",
+            "order": 4
+        }
+    },
+    {
+        "model": "GuildPost.menuitem",
+        "pk": 5,
+        "fields": {
+            "name": "Плитка",
+            "link": "/grid/",
+            "icon": "icon-grid",
+            "order": 5
+        }
+    }
+]

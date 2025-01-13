@@ -1,0 +1,28 @@
+<!-- /GuildPost/GuildPost/templates/activation_basic.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activation</title>
+</head>
+<body>
+    <!-- Контейнер для сообщения активации -->
+    <div class="activation-container">
+        <h1>Activate Your Account</h1> <!-- Заголовок -->
+
+        <p>Hello, {{ user.username }}!</p> <!-- Приветствие пользователя. Переменная из контекста view -->
+        <p>Вы получили это письмо потому что зарегистрировались на сайте GuildPost.com.</p> <!-- Инструкция пользователю -->
+        <p>Вам нужно активировать ваш аккаунт.</p> <!-- Инструкция пользователю -->
+        <p>Для этого:</p>
+        <p>- Скопируйте код для активации ниже</p>
+        <p>- и вставьте его в окошко для активации на сайте.</p> <!-- Инструкция пользователю -->
+        <p>Код для активации: {{ activation_code }}</p> <!-- Код активации из контекста -->
+        <p>или</p>
+        <p>кликните по ссылке ниже чтобы активизировать ваш аккаунт.:</p> <!-- Инструкция -->
+        <a href="{{ activation_url }}" class="activation-link">Activate Account</a> <!-- Ссылка для активации. URL передается через контекст -->
+        <p>Если вы не запрашивали это письмо, пожалуйста, проигнорируйте его.</p> <!-- Информационное сообщение -->
+    </div>
+</body>
+</html>
+

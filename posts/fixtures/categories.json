@@ -1,0 +1,112 @@
+[
+    {
+        "model": "posts.category",
+        "pk": 1,
+        "fields": {
+            "name": "Танки",
+            "slug": "tanki",
+            "description": "Категория для танков, основная задача которых — принимать урон.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 2,
+        "fields": {
+            "name": "Хилы",
+            "slug": "hily",
+            "description": "Категория для хилов, поддерживающих здоровье союзников.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 3,
+        "fields": {
+            "name": "ДД",
+            "slug": "dd",
+            "description": "Категория для дамагеров, наносящих максимальный урон врагам.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 4,
+        "fields": {
+            "name": "Торговцы",
+            "slug": "torgovcy",
+            "description": "Категория для торговцев, обеспечивающих экипировку и ресурсы.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 5,
+        "fields": {
+            "name": "Гилдмастеры",
+            "slug": "gildmastery",
+            "description": "Категория для лидеров гильдий.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 6,
+        "fields": {
+            "name": "Квестгиверы",
+            "slug": "kvestgivery",
+            "description": "Категория для NPC, выдающих квесты.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 7,
+        "fields": {
+            "name": "Кузнецы",
+            "slug": "kuznecy",
+            "description": "Категория для кузнецов, создающих оружие и броню.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 8,
+        "fields": {
+            "name": "Кожевники",
+            "slug": "kozhevniky",
+            "description": "Категория для мастеров кожевенного дела.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 9,
+        "fields": {
+            "name": "Зельевары",
+            "slug": "zelevary",
+            "description": "Категория для алхимиков, создающих зелья.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    },
+    {
+        "model": "posts.category",
+        "pk": 10,
+        "fields": {
+            "name": "Мастера заклинаний",
+            "slug": "mastera-zaklinaniy",
+            "description": "Категория для магов и чародеев.",
+            "created_at": "2024-12-18T12:00:00Z",
+            "updated_at": "2024-12-18T12:00:00Z"
+        }
+    }
+]

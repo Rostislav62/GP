@@ -1,0 +1,45 @@
+<!-- /GuildPost/posts/templates/posts/comments.html -->
+
+{% load static %}
+
+<h3>Комментарии:</h3>
+
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<!-- Ссылки "Назад" и "Главная" в верхней части -->
+<div class="navigation-links">
+    <!-- Ссылка "Назад" -->
+    <button id="back-link" data-url="{% url 'article_detail' article.id %}">← Назад</button>
+    <!-- Ссылка "Главная" -->
+    <button id="home-link">На главную</button>
+</div>
+
+<div class="comments-container" data-article-id="{{ article.id }}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Подключение стилей -->
+
+    {% for comment in comments %}
+    <div class="comment-block">
+        <!-- Имя автора и дата комментария -->
+        <p><strong>{{ comment.author.username }}</strong> - {{ comment.created_at|date:"d M Y H:i" }}</p>
+        <!-- Полный текст комментария -->
+        <p>{{ comment.content }}</p>
+        <!-- Кнопка лайка -->
+        <button class="like-button">
+            <i class="fas fa-thumbs-up"></i> Лайк
+        </button>
+    </div>
+    {% empty %}
+    <p>Нет комментариев. Будьте первым!</p>
+    {% endfor %}
+</div>
+
+<!-- Ссылки "Назад" и "Главная" в нижней части -->
+<div class="navigation-links">
+    <!-- Ссылка "Назад" -->
+    <button id="back-link-bottom" data-url="{% url 'article_detail' article.id %}">← Назад</button>
+    <!-- Ссылка "Главная" -->
+    <button id="home-link-bottom">На главную</button>
+</div>
+
+
+

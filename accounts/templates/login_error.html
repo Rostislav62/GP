@@ -1,0 +1,18 @@
+<!-- /GuildPost/GuildPost/templates/login_error.html -->
+
+<div class="login-box">
+
+    <!-- Текст ошибки -->
+    <div class="error-message">
+        <p>Неправильный логин или пароль.</p>
+        <p>Пожалуйста, попробуйте снова.</p>
+        <p>Будьте внимательны!</p>
+        <p>У вас есть только 3 попытки.</p>
+    </div>
+
+    <!-- Кнопка для возврата к авторизации -->
+    <form action="{% url 'clear_login_error' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Вернуться к авторизации</button>
+    </form>
+</div>

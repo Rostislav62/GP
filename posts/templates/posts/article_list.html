@@ -1,0 +1,67 @@
+<!-- /GuildPost/posts/templates/posts/article_list.html -->
+
+{% load static %}
+<div class="articles-container">
+    {% for article in articles %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={{ STATIC_VERSION }}">
+
+
+    <div class="article">
+        <!-- Аватар автора -->
+        <!-- Шапка статьи -->
+        <div class="article-header">
+            <div class="author-avatar">
+                {% if article.author.profile.avatar %}
+                    <img src="{{ article.author.profile.avatar.url }}" alt="Avatar">
+                {% else %}
+                    <img src="{% static 'pictures/avatar.webp' %}" alt="Default Avatar">
+                {% endif %}
+            </div>
+            <div class="author-info">
+                <p class="author-name">{{ article.author.first_name }} {{ article.author.last_name }}</p>
+                <p class="category">{{ article.category.name }}</p>
+            </div>
+            <button class="btn-follow">Подписаться</button>
+        </div>
+
+
+        <!-- Заголовок и текст -->
+        <div class="article-content">
+            <!-- Заголовок статьи -->
+            <h3 class="article-title load-article clickable" data-article-id="{{ article.id }}">{{ article.title }}</h3>
+
+            <!-- Первое предложение контента -->
+            <p class="article-preview load-article clickable" data-article-id="{{ article.id }}">{{ article.content|truncatewords:10 }}</p>
+
+            <!-- Медиафайл: изображение или видео -->
+            {% if article.media_file %}
+                {% if article.media_type == 'image' %}
+                    <img
+                        class="article-image load-article clickable"
+                        data-article-id="{{ article.id }}"
+                        src="{{ article.media_file.url }}"
+                        alt="Article Media"
+                        style="display: block; margin: 0 auto; max-width: 70%; height: auto;">
+                {% elif article.media_type == 'video' %}
+                    <video
+                        class="article-video load-article clickable"
+                        data-article-id="{{ article.id }}"
+                        src="{{ article.media_file.url }}"
+                        controls
+                        style="display: block; margin: 0 auto; max-width: 70%; height: auto;"></video>
+                {% endif %}
+            {% endif %}
+        </div>
+
+
+
+        <!-- Лайки, комментарии, просмотры -->
+        <div class="article-footer">
+            <button class="btn-like">👍 {{ article.likes_count }}</button>
+            <button class="btn-comment">💬 {{ article.comments.count }}</button>
+            <button class="btn-views">👁️ {{ article.views_count }}</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
