@@ -67,6 +67,7 @@
     </button>
     {% endif %}
 
+
     <!-- Последний комментарий -->
     {% if latest_comment %}
         <h3 id="latest-comment" class="comment-preview clickable" data-url="{% url 'all_comments' article.id %}">
@@ -96,9 +97,6 @@
         <p>Пожалуйста, <a href="{% url 'login' %}">войдите в систему</a>, чтобы оставить комментарий.</p>
     {% endif %}
 
-
-
-    </form>
 </div>
 
 

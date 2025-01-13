@@ -366,22 +366,27 @@ function updateThemeButton(button, theme) {
 // *******************************************************************************************
 /**
  * Обрабатывает клик по элементам меню.
- * @param {HTMLElement} item - Кликнутый элемент меню.
+ * @param {HTMLElement} item - Кликнутый элемент.
  */
 function handleMenuClick(item) {
-    const link = item.dataset.link; // Получаем значение data-link
+    const link = item.dataset.link; // Получаем значение атрибута data-link
 
     if (link === "grid" || link === "list") {
         setViewMode(link); // Устанавливаем режим отображения (сетка или список).
-    } else if (link === "news") { // Если нажата кнопка "Новость".
-        loadAdForm(); // Вызываем функцию для загрузки формы редактора объявления.
-    } else if (link === "home") { // Если нажата кнопка "Главная".
+    } else if (link === "news") {
+        loadAdForm(); // Загружаем форму редактора объявления.
+    } else if (link === "home") {
         loadArticles(); // Загружаем список статей.
+    } else if (link === "about") {
+        loadContent('/about/'); // Загружаем страницу "О нас".
+    } else if (link === "contacts") {
+        loadContent('/contacts/'); // Загружаем страницу "Контакты".
+    } else if (item.classList.contains("edit-article")) { // Если элемент - кнопка "Редактировать"
+        handleEditArticle(item); // Вызываем функцию обработки кнопки "Редактировать".
     } else {
         console.warn("Неподдерживаемое действие:", link); // Логируем неподдерживаемые действия.
     }
 }
-
 
 // ****************** Конец логики обработки кликов по элементам меню. ***********************
 
@@ -1070,4 +1075,32 @@ function fixParentStylesForModal() {
     });
 
     console.log("Исправление стилей завершено.");
+}
+
+
+// *******************************************************************************************
+//                   Логика для кнопки "Редактировать"
+// *******************************************************************************************
+
+/**
+ * Обрабатывает нажатие кнопки "Редактировать".
+ * Загружает форму редактирования статьи в центральную часть.
+ * @param {HTMLElement} button - Кликнутый элемент с кнопкой "Редактировать".
+ */
+function handleEditArticle(button) {
+    const url = button.getAttribute('data-url'); // Получаем URL из data-url кнопки
+
+    fetch(url) // Отправляем GET-запрос на сервер
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Ошибка загрузки формы: ${response.status}`); // Логируем ошибку, если запрос не удался
+            }
+            return response.text(); // Получаем HTML-контент формы
+        })
+        .then(html => {
+            const mainBox = document.querySelector('.main-box'); // Центральная часть страницы
+            mainBox.innerHTML = html; // Устанавливаем HTML формы в центральную часть
+            setupAdFormHandlers(); // Настраиваем обработчики для формы
+        })
+        .catch(error => console.error('Ошибка загрузки формы редактирования:', error)); // Логируем ошибки
 }

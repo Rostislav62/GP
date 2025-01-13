@@ -182,23 +182,34 @@ def create_ad(request):
 # Обработчик для редактирования объявления
 @login_required
 def edit_ad(request, pk):
-    # Получаем статью по ID и проверяем автора
-    article = get_object_or_404(Article, pk=pk, author=request.user)
+    """
+    Обработчик для редактирования объявления.
+    Загружает форму редактирования с данными текущей статьи.
+    """
+    article = get_object_or_404(Article, pk=pk)  # Получаем статью по ID
 
-    if request.method == "POST":  # Проверка на POST-запрос
-        # Обновляем поля статьи
+    # Если запрос GET, рендерим форму редактирования с заполненными данными
+    if request.method == "GET":
+        categories = Category.objects.all()  # Получаем все категории для выбора
+        return render(request, "posts/ad_form.html", {
+            "article": article,
+            "categories": categories,
+        })
+
+    # Если запрос POST, сохраняем изменения
+    if request.method == "POST":
         article.title = request.POST.get("title")
         article.content = request.POST.get("content")
         category_id = request.POST.get("category")
         article.category = get_object_or_404(Category, pk=category_id)
-        if "media_file" in request.FILES:
-            article.media_file = request.FILES["media_file"]
-        article.save()  # Сохраняем изменения
-        return JsonResponse({"message": "Объявление обновлено успешно!"})  # Ответ в формате JSON
+        media_file = request.FILES.get("media_file")
 
-    # Для GET-запроса возвращаем форму с данными статьи
-    categories = Category.objects.all()
-    return render(request, "posts/ad_form.html", {"article": article, "categories": categories})
+        if media_file:
+            article.media_file = media_file  # Обновляем медиафайл, если загружен новый
+
+        article.save()  # Сохраняем изменения
+        messages.success(request, f"Объявление '{article.title}' успешно обновлено!")
+        return redirect("article_detail", pk=article.pk)  # Перенаправляем на страницу статьи
 
 
 # Обработчик для предпросмотра объявления
