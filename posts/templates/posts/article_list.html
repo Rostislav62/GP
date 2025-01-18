@@ -1,11 +1,17 @@
 <!-- /GuildPost/posts/templates/posts/article_list.html -->
 
 {% load static %}
+{% load article_filters %}  <!-- Загружаем кастомные фильтры -->
+
+<!-- Заголовок категории, если выбрана категория -->
+{% if selected_category %}
+    <h2 class="category-title">Статьи в категории "{{ selected_category.name }}"</h2>
+{% endif %}
+
 <div class="articles-container">
     {% for article in articles %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}?v={{ STATIC_VERSION }}">
-
 
     <div class="article">
         <!-- Аватар автора -->
@@ -25,36 +31,22 @@
             <button class="btn-follow">Подписаться</button>
         </div>
 
-
         <!-- Заголовок и текст -->
         <div class="article-content">
             <!-- Заголовок статьи -->
             <h3 class="article-title load-article clickable" data-article-id="{{ article.id }}">{{ article.title }}</h3>
 
             <!-- Первое предложение контента -->
-            <p class="article-preview load-article clickable" data-article-id="{{ article.id }}">{{ article.content|truncatewords:10 }}</p>
+            <p class="article-preview load-article clickable" data-article-id="{{ article.id }}">
+                {{ article.content|truncate_html_words:20|safe }}
+            </p>
 
             <!-- Медиафайл: изображение или видео -->
-            {% if article.media_file %}
-                {% if article.media_type == 'image' %}
-                    <img
-                        class="article-image load-article clickable"
-                        data-article-id="{{ article.id }}"
-                        src="{{ article.media_file.url }}"
-                        alt="Article Media"
-                        style="display: block; margin: 0 auto; max-width: 70%; height: auto;">
-                {% elif article.media_type == 'video' %}
-                    <video
-                        class="article-video load-article clickable"
-                        data-article-id="{{ article.id }}"
-                        src="{{ article.media_file.url }}"
-                        controls
-                        style="display: block; margin: 0 auto; max-width: 70%; height: auto;"></video>
-                {% endif %}
-            {% endif %}
+            <div class="media-container load-article clickable" data-article-id="{{ article.id }}">
+                {{ article.content|extract_first_media|safe }}
+            </div>
+
         </div>
-
-
 
         <!-- Лайки, комментарии, просмотры -->
         <div class="article-footer">

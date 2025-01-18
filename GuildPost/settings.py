@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'silk',  # Silk для мониторинга
     'posts',  # приложение для функционала категорий и статей
     'GuildPost',  # Добавляем проект как приложение
+    'tinymce',  # Подключение TinyMCE
 ]
 
 if not DEBUG:
@@ -125,14 +126,23 @@ STATICFILES_DIRS = [BASE_DIR / 'static']  # Дополнительные ста�
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Сбор статики
 MEDIA_URL = '/media/'  # Медиафайлы
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')# Корневая папка для Медиафайлов
-# TEMP_MEDIA_ROOT = os.path.join(MEDIA_ROOT, 'articles/media/tmp/')# Папка для временных файлов
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 300,  # Высота редактора
+    "width": "100%",  # Ширина редактора
+    "plugins": "image media link code table paste",  # Подключаем плагины для работы с медиа
+    "toolbar": "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | "
+               "bullist numlist outdent indent | link image media | code",  # Добавляем кнопки для медиа
+    "menubar": "insert",  # Включаем меню для вставки
+    "file_picker_types": "file image media",  # Разрешаем выбор файлов, изображений и видео
+    "automatic_uploads": True,  # Автоматическая загрузка медиа
+    "image_caption": True,  # Поддержка подписей для изображений
+}
 
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: False,  # Отключаем Debug Toolbar
 }
-
-
 
 
 # === Rest Framework ===

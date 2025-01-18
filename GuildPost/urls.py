@@ -17,6 +17,8 @@ if settings.DEBUG:
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),  # Главная страница
+    path('about/', TemplateView.as_view(template_name='about.html'), name='about'),  # Страница "О нас"
+    path('contacts/', TemplateView.as_view(template_name='contacts.html'), name='contacts'),  # Страница "Контакты"
     path('api/auth/', include('dj_rest_auth.urls')),  # API для входа/выхода
     path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # API для регистрации
     path('', include('accounts.urls')),  # Маршруты приложения accounts
@@ -26,10 +28,10 @@ urlpatterns = [
     path('__debug__/', include(debug_toolbar.urls)),  # Путь для Debug Toolbar
     path('silk/', include('silk.urls')),  # Путь для Silk
     path("api/server-time/", get_server_time, name="server_time"),
+    path('tinymce/', include('tinymce.urls')),
 
 ]
 
 # Добавляем маршруты для обслуживания медиафайлов в режиме отладки
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -8,38 +8,33 @@
 
 <!-- Ссылки "Назад" и "Главная" в верхней части -->
 <div class="navigation-links">
-    <!-- Ссылка "Назад" -->
     <button id="back-link" data-url="{% url 'article_detail' article.id %}">← Назад</button>
-    <!-- Ссылка "Главная" -->
     <button id="home-link">На главную</button>
 </div>
 
 <div class="comments-container" data-article-id="{{ article.id }}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Подключение стилей -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     {% for comment in comments %}
     <div class="comment-block">
-        <!-- Имя автора и дата комментария -->
         <p><strong>{{ comment.author.username }}</strong> - {{ comment.created_at|date:"d M Y H:i" }}</p>
-        <!-- Полный текст комментария -->
         <p>{{ comment.content }}</p>
-        <!-- Кнопка лайка -->
+
+        {% if request.user == article.author %}
+            <p><small>Статус: {{ comment.get_status_display }}</small></p>
+        {% endif %}
+
         <button class="like-button">
             <i class="fas fa-thumbs-up"></i> Лайк
         </button>
     </div>
     {% empty %}
-    <p>Нет комментариев. Будьте первым!</p>
+    <p>Нет комментариев.</p>
     {% endfor %}
 </div>
 
 <!-- Ссылки "Назад" и "Главная" в нижней части -->
 <div class="navigation-links">
-    <!-- Ссылка "Назад" -->
     <button id="back-link-bottom" data-url="{% url 'article_detail' article.id %}">← Назад</button>
-    <!-- Ссылка "Главная" -->
     <button id="home-link-bottom">На главную</button>
 </div>
-
-
-

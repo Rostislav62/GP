@@ -1,7 +1,8 @@
 <!-- /GuildPost/posts/templates/posts/ad_preview.html -->
 {% load static %}
-<script src="{% static 'js/scripts.js' %}"></script>  <!-- Подключаем CSS для стилизации формы -->
-<div class="ad-preview" data-temp-file-name="{{ media_file.name }}">
+<script src="{% static 'js/scripts.js' %}"></script>  <!-- Подключаем JavaScript -->
+
+<div class="ad-preview">
 
     <!-- Заголовок статьи -->
     <div class="article-header">
@@ -20,25 +21,9 @@
         <h1 class="article-title">{{ title }}</h1>
     </div>
 
-    <!-- Полный текст статьи -->
+    <!-- Полный текст статьи с поддержкой HTML -->
     <div class="ad-content">
-        <p>{{ content }}</p>
-    </div>
-
-    <!-- Медиафайл: изображение или видео -->
-    <div class="media-container">
-        {% if media_url %}
-            {% if media_type == 'image' %}
-                <img src="{{ media_url }}" alt="Изображение" class="article-media">
-            {% elif media_type == 'video' %}
-                <video controls class="article-media">
-                    <source src="{{ media_url }}" type="video/mp4">
-                    Ваш браузер не поддерживает воспроизведение видео.
-                </video>
-            {% endif %}
-        {% else %}
-            <p>Нет медиафайла для отображения.</p>
-        {% endif %}
+        {{ content|safe }}
     </div>
 
     <!-- Кнопки управления -->
@@ -48,7 +33,6 @@
             <input type="hidden" name="title" value="{{ title }}">
             <input type="hidden" name="content" value="{{ content }}">
             <input type="hidden" name="category" value="{{ category.id }}">
-            <input type="hidden" name="media_url" value="{{ media_url }}">
 
             <button type="submit" id="save-ad" class="button-save">
                 <i class="fa fa-save"></i> Сохранить

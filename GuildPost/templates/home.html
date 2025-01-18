@@ -7,15 +7,17 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GuildPost - Главная</title>
     {% load static %} <!-- Загрузка библиотеки static -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Подключение CSS -->
 
-    <script src="{% static 'js/scripts.js' %}"></script> <!-- Подключение scripts.js -->
+    <script src="{% static 'js/scripts.js' %}?v={{ STATIC_VERSION }}"></script> <!-- Подключение scripts.js -->
 
     <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon"> <!-- Подключение иконки сайта -->
+    <script src="https://cdn.tiny.cloud/1/ctbvkdvlp7n40gymfcgyxwfp3b2o0i2c4kn7d2mc1reb1n76/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body data-register="{{ register_flag|default:'false' }}" data-theme="light">
 
@@ -68,6 +70,32 @@
 
             <!-- Кнопка "Список" (добавляется через JavaScript) -->
             <!-- Эта кнопка будет сгенерирована клиентским кодом -->
+
+
+            <!-- Кнопка "Контакты" -->
+            {% if item.link == "contacts" %}
+            <div class="menu-item clickable" data-link="contacts">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "О нас" -->
+            {% if item.link == "about" %}
+            <div class="menu-item clickable" data-link="about">
+                <i class="{{ item.icon }}"></i> <!-- Иконка кнопки, если она задана -->
+                {{ item.name }} <!-- Отображаемое название кнопки -->
+            </div>
+            {% endif %}
+
+            <!-- Кнопка "Мои отклики" (только для авторизованных пользователей) -->
+            {% if item.link == "responses" and user.is_authenticated %}
+            <div class="menu-item clickable" data-link="responses">
+                <i class="fas fa-comments"></i> <!-- Иконка для "Мои отклики" -->
+                {{ item.name }}
+            </div>
+            {% endif %}
+
         {% endfor %}
     </div>
 
@@ -99,16 +127,26 @@
             <!-- Бокс с категориями новостей -->
             <div class="sidebar-box" id="categories-box">  <!-- Категории будут загружены сюда через AJAX -->
             </div>
-            <!-- Бокс с отображением времени -->
+
             <!-- Бокс с отображением времени и часовых поясов -->
             <div class="sidebar-box theme-adaptable" id="time-display-box">
-                <div class="time-display">
-                    <p>Время сервера: <span id="server-time"></span></p>
-                    <p>Часовой пояс сервера: <span id="server-timezone"></span></p>
-                    <p>Время пользователя: <span id="user-time"></span></p>
-                    <p>Часовой пояс пользователя: <span id="user-timezone"></span></p>
+                <div class="time-display-container">
+                    <!-- Время сервера -->
+                    <div class="server-time-section">
+                        <h3>Сервер</h3>
+                        <p>Время: <span id="server-time"></span></p>
+                        <p>Часовой пояс: <span id="server-timezone"></span></p>
+                    </div>
+
+                    <!-- Время пользователя -->
+                    <div class="user-time-section">
+                        <h3>Пользователь</h3>
+                        <p>Время: <span id="user-time"></span></p>
+                        <p>Часовой пояс: <span id="user-timezone"></span></p>
+                    </div>
                 </div>
             </div>
+
         </div>
      <!-- ***************************************************************************************** -->
 

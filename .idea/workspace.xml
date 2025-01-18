@@ -24,7 +24,7 @@
         <option value="Rostislav" />
       </list>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/GuildPost" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -40,25 +40,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/rsmiglix/OneDrive - Intel Corporation/Documents/GitHub/GuildPost/static/js/web",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/rsmiglix/OneDrive - Intel Corporation/Documents/GitHub/GuildPost/static/js/web&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\static\js\web" />
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\GuildPost\templates" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\posts\templates\posts" />
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\static\js" />
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\static\old" />
-      <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\posts\templates\posts" />
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\posts\templates" />
       <recent name="C:\Users\rsmiglix\OneDrive - Intel Corporation\Documents\GitHub\GuildPost\accounts\templates" />
     </key>
@@ -114,16 +114,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Промежуточная версия." />
     <option name="LAST_COMMIT_MESSAGE" value="Промежуточная версия." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/GuildPost/views.py</url>
-          <line>1</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

@@ -2,30 +2,6 @@
 /GuildPost/static/js/scripts.js
 */
 
-//Вставим диагностический код в scripts.js для проверки z-index всех элементов на странице:
-//
-//Файл: <!-- /GuildPost/static/js/scripts.js -->
-//Добавь временный код в начало файла:
-
-document.addEventListener("DOMContentLoaded", () => {
-    console.log("Начинаем проверку элементов на странице...");
-
-    // Проверяем все элементы с потенциальными стилями z-index
-    const elements = document.querySelectorAll('*'); // Получаем все элементы на странице
-    elements.forEach(el => {
-        const zIndex = window.getComputedStyle(el).zIndex; // Получаем z-index элемента
-        if (zIndex && zIndex !== 'auto') {
-            console.log(`Элемент: ${el.tagName}.${el.className}, z-index: ${zIndex}`);
-        }
-    });
-
-    console.log("Проверка завершена.");
-});
-
-
-
-
-
 // *******************************************************************************************
 //                           Настройка обработчиков при загрузке страницы
 // *******************************************************************************************
@@ -44,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupToggleViewModeHandler(); // Настраиваем кнопку "Список/Плитка"
     setupToggleViewThemeHandler(); // Настраиваем кнопку переключения темы
     setupGlobalClickHandler(); //Универсальная обработка кликов по элементам страницы комментариев
+
 });
 
 // ********************** Конец настройки обработчиков при загрузке страницы **********************
@@ -60,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 function setupLoadArticleHandlers() {
     const articleElements = document.querySelectorAll(".load-article");
-    console.log(`Выполнен document.querySelectorAll(".load-article")  ${articleElements}`);
 
     articleElements.forEach((element) => {
         element.addEventListener("click", function () {
@@ -84,8 +60,6 @@ function setupLoadArticleHandlers() {
  * @param {Function} [callback] - Функция, вызываемая после загрузки контента.
  */
 function loadContent(url, callback) {
-    console.log(`Входной параметр ${url}  `, url);
-    console.log(`Входной параметр ${callback}  `, callback);
     const mainBox = document.querySelector(".main-box");
 
     fetch(url)
@@ -361,6 +335,60 @@ function updateThemeButton(button, theme) {
 // ****************** Конец логики переключения светлой/тёмной темы ***********************
 
 
+// Функция для инициализации TinyMCE
+/**
+ * Инициализация TinyMCE с поддержкой медиафайлов.
+ */
+// Инициализация TinyMCE с правильным идентификатором
+function initializeTinyMCE() {
+    tinymce.init({
+        selector: '#id_content', // Исправлен идентификатор на #content
+        plugins: 'image media link paste code',
+        toolbar: 'undo redo | bold italic | link image media | code',
+        height: 300,
+        automatic_uploads: true,
+        file_picker_types: 'image media',
+        images_upload_url: '/upload/',
+        paste_data_images: true,
+        file_picker_callback: function (callback, value, meta) {
+            if (meta.filetype === 'image' || meta.filetype === 'media') {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', meta.filetype === 'image' ? 'image/*' : 'video/*');
+
+                input.onchange = function () {
+                    const file = this.files[0];
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+
+                    fetch('/upload/', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.location) {
+                                callback(data.location, { alt: file.name });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Ошибка загрузки файла:', error);
+                        });
+                };
+
+                input.click();
+            }
+        },
+    });
+}
+
+
+
+
+
+
+
 // *******************************************************************************************
 //                          Логика обработки кликов по элементам меню.
 // *******************************************************************************************
@@ -368,13 +396,18 @@ function updateThemeButton(button, theme) {
  * Обрабатывает клик по элементам меню.
  * @param {HTMLElement} item - Кликнутый элемент.
  */
+
 function handleMenuClick(item) {
     const link = item.dataset.link; // Получаем значение атрибута data-link
 
     if (link === "grid" || link === "list") {
         setViewMode(link); // Устанавливаем режим отображения (сетка или список).
     } else if (link === "news") {
-        loadAdForm(); // Загружаем форму редактора объявления.
+        // Загружаем форму редактора объявления и инициализируем TinyMCE после её загрузки
+        loadAdForm(() => {
+            initializeTinyMCE(); // Инициализируем TinyMCE только после успешной загрузки формы
+            setupAdFormHandlers(); //Настраивает обработчики событий для формы нового объявления.
+        });
     } else if (link === "home") {
         loadArticles(); // Загружаем список статей.
     } else if (link === "about") {
@@ -383,10 +416,19 @@ function handleMenuClick(item) {
         loadContent('/contacts/'); // Загружаем страницу "Контакты".
     } else if (item.classList.contains("edit-article")) { // Если элемент - кнопка "Редактировать"
         handleEditArticle(item); // Вызываем функцию обработки кнопки "Редактировать".
+    } else if (link === "find") {
+        loadContent('/search/', () => {
+            setupSearchFormHandler(); // Настраиваем обработчик для формы поиска
+            console.log("Форма поиска загружена.");
+            });
+    } else if (link === "responses") { // Если пользователь кликнул на "Мои отклики"
+        loadContent('/my-responses/'); // Загружаем страницу откликов в центральную часть
+        return; // Прерываем выполнение, так как обработали событие
     } else {
         console.warn("Неподдерживаемое действие:", link); // Логируем неподдерживаемые действия.
     }
 }
+
 
 // ****************** Конец логики обработки кликов по элементам меню. ***********************
 
@@ -758,50 +800,49 @@ function setupAutoThemeSwitch() {
 // Настраиваем автоматическую смену темы при загрузке страницы
 document.addEventListener("DOMContentLoaded", setupAutoThemeSwitch);
 
-/**
- * Обновляет текущее время пользователя и его часовой пояс.
- */
+
+// *******************************************************************************************
+//                          Логика для часового пояса и времени
+// *******************************************************************************************
+/**  * Обновляет текущее время пользователя и его часовой пояс.  */
 function updateUserTime() {
     const userTimeElement = document.getElementById("user-time");
     const userTimezoneElement = document.getElementById("user-timezone");
     if (!userTimeElement || !userTimezoneElement) return;
 
-    const userTime = new Date(); // Текущее время пользователя
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Не удалось определить"; // Часовой пояс пользователя
+    const userTime = new Date();
+    const formattedTime = userTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Только часы и минуты
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "Не удалось определить";
 
-    userTimeElement.textContent = userTime.toLocaleString(); // Форматируем и выводим время
+    userTimeElement.textContent = formattedTime; // Отображаем время в формате HH:MM
     userTimezoneElement.textContent = userTimezone; // Отображаем часовой пояс
 }
 
-/**
- * Обновляет текущее время и часовой пояс сервера.
- */
+/**  * Обновляет текущее время и часовой пояс сервера.  */
 function updateServerTime() {
     const serverTimeElement = document.getElementById("server-time");
     const serverTimezoneElement = document.getElementById("server-timezone");
     if (!serverTimeElement || !serverTimezoneElement) return;
 
-    fetch("/api/server-time/") // API для получения времени и часового пояса сервера
+    fetch("/api/server-time/")
         .then((response) => {
             if (!response.ok) throw new Error(`Ошибка загрузки времени сервера: ${response.statusText}`);
-            return response.json(); // Ожидаем формат: { "server_time": "2025-01-01T12:00:00Z", "server_timezone": "UTC" }
+            return response.json();
         })
         .then((data) => {
-            const serverTime = new Date(data.server_time); // Преобразуем в объект Date
-            serverTimeElement.textContent = serverTime.toLocaleString(); // Форматируем и выводим время
-            serverTimezoneElement.textContent = data.server_timezone || "Неизвестный часовой пояс"; // Отображаем часовой пояс сервера
+            const serverTime = new Date(data.server_time);
+            const formattedTime = serverTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Только часы и минуты
+            serverTimeElement.textContent = formattedTime;
+            serverTimezoneElement.textContent = data.server_timezone || "Неизвестный часовой пояс";
         })
         .catch((error) => console.error("Ошибка обновления времени сервера:", error));
 }
 
-/**
- * Устанавливает регулярное обновление времени и часовых поясов для пользователя и сервера.
- */
+/**  * Устанавливает регулярное обновление времени и часовых поясов.  */
 function setupTimeUpdates() {
-    updateUserTime(); // Обновляем время и часовой пояс пользователя
-    updateServerTime(); // Обновляем время и часовой пояс сервера
+    updateUserTime();
+    updateServerTime();
 
-    // Настраиваем интервал для регулярного обновления
     setInterval(() => {
         updateUserTime();
         updateServerTime();
@@ -816,7 +857,6 @@ document.addEventListener("DOMContentLoaded", setupTimeUpdates);
 
 
 
-
 // *******************************************************************************************
 //                          Логика для кнопки "Новость" создание нового поста
 // *******************************************************************************************
@@ -824,19 +864,28 @@ document.addEventListener("DOMContentLoaded", setupTimeUpdates);
 /**
  * Загружает форму создания объявления в центральную часть страницы.
  */
-function loadAdForm() {
-    const mainBox = document.querySelector('.main-box'); // Контейнер центральной части
-    fetch('/ads/create/') // Отправляем запрос для получения формы создания объявления
+
+function loadAdForm(callback) {
+    fetch('/ads/create/')
         .then(response => response.text())
         .then(html => {
-            mainBox.innerHTML = html; // Устанавливаем HTML-контент формы
-            setupAdFormHandlers(); // Настраиваем обработчики событий для формы создания нового поста
+            const mainBox = document.querySelector('.main-box');
+            mainBox.innerHTML = html;
+
+            // Проверяем, доступен ли объект TinyMCE
+            if (typeof tinymce === "undefined") {
+                console.error("TinyMCE не загружен. Убедитесь, что скрипт подключён.");
+            } else if (callback) {
+                callback(); // Вызываем коллбэк
+            }
         })
-        .catch(error => console.error('Ошибка загрузки формы редактора новостей:', error)); // Логируем ошибку, если запрос не удался
+        .catch(error => console.error('Ошибка загрузки формы редактора:', error));
 }
 
+
+
 /**
- * Настраивает обработчики событий для формы объявления.
+ * Настраивает обработчики событий для формы нового объявления.
  */
 function setupAdFormHandlers() {
     const form = document.getElementById('ad-form'); // Форма объявления
@@ -887,16 +936,10 @@ function handleAdSubmit(event) {
  * Обрабатывает нажатие кнопки "Предпросмотр".
  * Проверяет обязательные поля формы и отображает страницу Предпросмотр.
  */
+// Функция для обработки предпросмотра
 function handleAdPreview() {
     const adFormContainer = document.querySelector('.ad-form-container'); // Контейнер формы
     const adForm = document.getElementById('ad-form'); // Форма объявления
-    // Определяем URL медиафайла из элемента формы или сервера
-    const mediaInput = document.getElementById('media_file');
-    const mediaUrl = mediaInput ? mediaInput.dataset.mediaUrl : null; // Получаем URL, если он есть
-
-    if (mediaUrl) {
-        formData.append("media_url", mediaUrl); // Добавляем URL файла в данные формы
-    }
 
     if (!adFormContainer || !adForm) {
         console.error('Контейнер формы или форма не найдены!');
@@ -906,7 +949,18 @@ function handleAdPreview() {
     // Проверяем обязательные поля формы
     const title = document.getElementById('title')?.value.trim();
     const category = document.getElementById('category')?.value.trim();
-    const content = document.getElementById('content')?.value.trim();
+
+    // Проверяем доступность TinyMCE
+    const tinyMCEInstance = tinymce.get('id_content');
+    if (!tinyMCEInstance) {
+        console.error("TinyMCE не инициализирован для элемента 'id_content'.");
+        console.log("Все зарегистрированные редакторы:", tinymce.editors);
+        showNotification('Редактор текста не готов. Попробуйте позже.', 'error');
+        return;
+    }
+
+    // Получаем данные из TinyMCE
+    const content = tinyMCEInstance.getContent()?.trim();
 
     if (!title || !category || !content) {
         // Если обязательные поля не заполнены, показываем уведомление
@@ -914,19 +968,24 @@ function handleAdPreview() {
         return;
     }
 
-    adFormContainer.classList.add('hidden'); // Делаем контейнер формы невидимым
     const formData = new FormData(adForm); // Собираем данные формы
-    formData.append("media_url", mediaUrl);  // Передаём URL файла
+    formData.append('content', content); // Явно добавляем содержимое TinyMCE
 
     // Отладочный вывод всех данных формы
     for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Логируем ключи и значения
     }
+
     fetch('/ads/preview/', { // Отправляем запрос для получения страницы предпросмотра
         method: 'POST',
         body: formData
     })
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+            return response.text();
+        })
         .then(html => {
             const mainBox = document.querySelector('.main-box'); // Центральная часть страницы
             mainBox.innerHTML = html; // Загружаем HTML-контент предпросмотра
@@ -934,9 +993,11 @@ function handleAdPreview() {
         })
         .catch(error => {
             console.error('Ошибка предпросмотра:', error); // Логируем ошибку, если запрос не удался
-            showNotification('Не удалось загрузить предпросмотр. Попробуйте позже.');
+            showNotification('Не удалось загрузить предпросмотр. Попробуйте позже.', 'error');
         });
 }
+
+
 
 // *******************************************************************************************
 //                          Логика для кнопки "Вернуться в редактор"
@@ -1104,3 +1165,506 @@ function handleEditArticle(button) {
         })
         .catch(error => console.error('Ошибка загрузки формы редактирования:', error)); // Логируем ошибки
 }
+
+
+
+
+// *******************************************************************************************
+//                  Логика обработки формы поиска статей
+// *******************************************************************************************
+
+/**
+ * Настраивает обработчик отправки формы поиска.
+ */
+function setupSearchFormHandler() {
+    const searchForm = document.querySelector("#search-form"); // Находим форму поиска
+
+    if (searchForm) {
+        searchForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // Предотвращаем стандартное поведение формы
+
+            const url = searchForm.action; // Получаем URL для отправки формы
+            const formData = new FormData(searchForm); // Собираем данные формы
+
+            fetch(url, {
+                method: "GET", // Используем метод GET для отправки данных
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest", // Указываем, что это AJAX-запрос
+                },
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Ошибка: ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then((html) => {
+                    const mainBox = document.querySelector(".main-box");
+                    mainBox.innerHTML = html; // Обновляем содержимое центральной части
+                    console.log("Результаты поиска загружены.");
+                })
+                .catch((error) => {
+                    console.error("Ошибка при загрузке результатов поиска:", error);
+                });
+        });
+    } else {
+        console.warn("Форма поиска не найдена.");
+    }
+}
+
+// ****************************Конец логики обработки формы поиска статей********************
+
+
+// Функция для отображения уведомлений
+function showNotification(message, type = "info") {
+    // Проверяем наличие контейнера для уведомлений
+    let notificationBox = document.getElementById("notification-box");
+
+    if (!notificationBox) {
+        // Если контейнер отсутствует, создаём его
+        notificationBox = document.createElement("div");
+        notificationBox.id = "notification-box";
+        document.body.appendChild(notificationBox);
+    }
+
+    // Создаём элемент уведомления
+    const notification = document.createElement("div");
+    notification.className = `notification ${type}`; // Устанавливаем тип уведомления (info, success, error)
+    notification.textContent = message; // Добавляем текст сообщения
+
+    // Добавляем уведомление в контейнер
+    notificationBox.appendChild(notification);
+
+    // Автоматически скрываем уведомление через 3 секунды
+    setTimeout(() => {
+        notification.remove(); // Удаляем уведомление из DOM
+    }, 3000);
+}
+
+
+/**
+ * Подтверждение удаления статьи.
+ * @param {HTMLElement} button - Кнопка "Удалить".
+ */
+function confirmDelete(button) {
+    const articleId = button.getAttribute("data-article-id");
+    const url = button.getAttribute("data-url");
+
+    if (confirm("Вы уверены, что хотите удалить эту статью? Это действие нельзя отменить!")) {
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+                "X-Requested-With": "XMLHttpRequest",
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert("Статья удалена!");
+                loadContent('/posts/articles/'); // После удаления загружаем список статей
+            } else {
+                alert(data.error || "Ошибка при удалении статьи!");
+            }
+        })
+        .catch(error => console.error("Ошибка удаления:", error));
+    }
+}
+
+/**
+ * Получает CSRF-токен из cookie.
+ * Django использует CSRF-токен для защиты от атак.
+ */
+function getCSRFToken() {
+    let cookieValue = null;
+    const cookies = document.cookie.split(";");
+
+    // Перебираем все куки и ищем csrftoken
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith("csrftoken=")) {
+            cookieValue = cookie.substring("csrftoken=".length, cookie.length);
+            break;
+        }
+    }
+    return cookieValue;
+}
+
+/**
+ * Обновляет статус комментария без перезагрузки страницы.
+ * @param {number} commentId - ID комментария.
+ * @param {string} newStatus - Новый статус комментария ("approved" или "rejected").
+ */
+function updateCommentStatus(commentId, newStatus) {
+    const statusElement = document.querySelector(`#comment-status-${commentId}`);
+    if (statusElement) {
+        statusElement.textContent = newStatus === "approved" ? "Одобрен" : "Отклонен"; // Меняем текст статуса
+    }
+
+    const buttonsContainer = document.querySelector(`#comment-actions-${commentId}`);
+    if (buttonsContainer) {
+        buttonsContainer.innerHTML = ""; // Удаляем кнопки "Принять" и "Отклонить"
+    }
+}
+
+/**
+ * Отправляет AJAX-запрос для принятия отклика.
+ * @param {number} commentId - ID отклика, который нужно принять.
+ */
+function approveComment(commentId) {
+    fetch(`/comments/approve/${commentId}/`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCSRFToken(),
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCommentStatus(commentId, "approved"); // ✅ Меняем статус на "Одобрен"
+        }
+    })
+    .catch(error => console.error("Ошибка при одобрении отклика:", error));
+}
+
+/**
+ * Отправляет AJAX-запрос для отклонения отклика.
+ * @param {number} commentId - ID отклика, который нужно отклонить.
+ */
+function rejectComment(commentId) {
+    fetch(`/comments/reject/${commentId}/`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCSRFToken(),
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCommentStatus(commentId, "rejected"); // ✅ Меняем статус на "Отклонен"
+        }
+    })
+    .catch(error => console.error("Ошибка при отклонении отклика:", error));
+}
+
+/**
+ * Отправляет AJAX-запрос для удаления отклика.
+ * @param {number} commentId - ID отклика, который нужно удалить.
+ */
+function deleteComment(commentId) {
+    fetch(`/comments/delete/${commentId}/`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCSRFToken(),
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const commentRow = document.querySelector(`#comment-row-${commentId}`);
+            if (commentRow) {
+                commentRow.remove(); // Удаляем строку комментария из таблицы
+            }
+        } else {
+            console.error("Ошибка при удалении комментария:", data.error);
+        }
+    })
+    .catch(error => console.error("Ошибка удаления отклика:", error));
+}
+
+/**
+ * Позволяет пользователю редактировать свой комментарий.
+ * @param {number} commentId - ID комментария.
+ */
+function editComment(commentId) {
+    console.log(`editComment вызван для commentId: ${commentId}`); // Проверяем, вызывается ли функция
+    const commentContent = document.querySelector(`#comment-content-${commentId}`); // Находим контент комментария
+    const actionsContainer = document.querySelector(`#comment-actions-${commentId}`); // Контейнер с кнопками
+
+    if (!commentContent || !actionsContainer) return; // Проверяем, что элементы существуют
+
+    // Создаем поле ввода с текущим текстом комментария
+    const textArea = document.createElement("textarea");
+    textArea.value = commentContent.textContent;
+    textArea.id = `edit-comment-input-${commentId}`;
+    textArea.rows = 3;
+    textArea.style.width = "100%";
+
+    // Заменяем текст комментария на поле ввода
+    commentContent.innerHTML = "";
+    commentContent.appendChild(textArea);
+
+    // Добавляем кнопки "Сохранить" и "Отмена"
+    actionsContainer.innerHTML = `
+        <button onclick="saveComment(${commentId})">💾 Сохранить</button>
+        <button onclick="cancelEdit(${commentId})">❌ Отмена</button>
+    `;
+}
+
+/**
+ * Отправляет изменения комментария на сервер через AJAX.
+ * @param {number} commentId - ID комментария.
+ */
+function saveComment(commentId) {
+    const newText = document.querySelector(`#edit-comment-input-${commentId}`).value; // Получаем новый текст
+
+    fetch(`/comments/edit/${commentId}/`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCSRFToken(),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ content: newText }) // Отправляем JSON с новым текстом
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const commentContent = document.querySelector(`#comment-content-${commentId}`);
+            commentContent.textContent = data.new_content; // Обновляем текст комментария на странице
+            document.querySelector(`#comment-actions-${commentId}`).innerHTML = `
+                <button onclick="editComment(${commentId})">✏️ Редактировать</button>
+                <button onclick="deleteComment(${commentId})">🗑 Удалить</button>
+            `;
+        } else {
+            console.error("Ошибка при редактировании:", data.error);
+        }
+    });
+}
+
+
+/**
+ * Отменяет редактирование комментария.
+ * @param {number} commentId - ID комментария.
+ */
+function cancelEdit(commentId) {
+    location.reload(); // Просто обновляем страницу, чтобы вернуть старое состояние
+}
+
+
+/** **********************************************************************************
+
+/**
+ * Настраивает обработчик отправки формы фильтрации откликов через AJAX.
+ */
+
+function setupResponseFilterHandler() {
+    console.log("Подключение setupResponseFilterHandler()..."); // Логируем вызов обработчика
+
+    const filterForm = document.querySelector("#response-filter-form"); // Находим форму фильтрации
+    if (!filterForm) return; // Если формы нет, ничего не делаем
+
+    // Удаляем старый обработчик перед добавлением нового
+    filterForm.removeEventListener("submit", handleFilterSubmit);
+    filterForm.addEventListener("submit", handleFilterSubmit);
+}
+
+/**
+ * Обработчик отправки формы фильтрации (AJAX).
+ */
+function handleFilterSubmit(event) {
+    console.log("Подключение handleFilterSubmit"); // Логируем вызов
+    event.preventDefault(); // Предотвращаем стандартную перезагрузку страницы
+
+    const formData = new FormData(event.target); // Собираем данные формы
+    const queryString = new URLSearchParams(formData).toString(); // Кодируем параметры для URL
+    const url = `/my-responses/?${queryString}`; // Формируем URL с параметрами
+
+    console.log(`Фильтр отправляется: ${url}`); // Логируем URL запроса
+
+    loadContent(url, () => {
+        setupResponseFilterHandler(); // Заново подключаем обработчик после загрузки
+    });
+}
+
+
+
+/**
+ * Подключает обработчики кнопок "Редактировать" и "Удалить" после загрузки `my_responses.html`.
+ */
+function setupCommentActionHandlers() {
+    document.querySelectorAll("[onclick^='editComment']").forEach(button => {
+        const commentId = button.getAttribute("onclick").match(/\d+/)[0]; // Извлекаем ID комментария
+        button.onclick = () => editComment(commentId); // Назначаем правильный обработчик
+    });
+
+    document.querySelectorAll("[onclick^='deleteComment']").forEach(button => {
+        const commentId = button.getAttribute("onclick").match(/\d+/)[0]; // Извлекаем ID комментария
+        button.onclick = () => deleteComment(commentId); // Назначаем правильный обработчик
+    });
+}
+
+/**
+ * Отлавливает момент загрузки `my_responses.html` и подключает обработчики кнопок.
+ */
+function setupMyResponsesObserver() {
+    const mainBox = document.querySelector(".main-box");
+
+    // Используем MutationObserver, чтобы отслеживать изменения в `.main-box`
+    const observer = new MutationObserver(() => {
+        if (document.querySelector("#response-filter-form")) {
+            setupResponseFilterHandler(); // Подключаем обработчик фильтрации
+            setupCommentActionHandlers(); // Подключаем обработчики кнопок "Редактировать" и "Удалить"
+        }
+    });
+
+    observer.observe(mainBox, { childList: true, subtree: true });
+}
+
+// Подключаем обработчик `setupMyResponsesObserver()`, чтобы он следил за изменениями в `.main-box`
+document.addEventListener("DOMContentLoaded", () => {
+    setupMyResponsesObserver();
+});
+
+
+
+/**
+ * Показывает форму для выбора причины отклонения и скрывает старую кнопку "Отклонить".
+ * @param {number} commentId - ID комментария.
+ */
+function showRejectReasonForm(commentId) {
+    const reasonForm = document.querySelector(`#reject-reason-${commentId}`); // Форма выбора причины
+    const rejectButton = document.querySelector(`#reject-button-${commentId}`); // Кнопка "Отклонить"
+
+    if (reasonForm && rejectButton) {
+        reasonForm.style.display = "block"; // Показываем форму выбора причины
+        rejectButton.style.visibility = "hidden"; // Вместо `display: none`, чтобы не менять структуру
+    }
+}
+
+
+
+
+/**
+ * Отправляет AJAX-запрос для отклонения комментария с указанием причины.
+ * @param {number} commentId - ID комментария.
+ */
+function rejectComment(commentId) {
+    const selectElement = document.querySelector(`#reason-select-${commentId}`);
+    const customReasonInput = document.querySelector(`#custom-reason-${commentId}`);
+
+    let reason = selectElement.value;
+    if (reason === "Другое") {
+        reason = customReasonInput.value.trim(); // Используем введенный пользователем текст
+    }
+
+    if (!reason) {
+        alert("Выберите или укажите причину отклонения!");
+        return;
+    }
+
+    fetch(`/comments/reject/${commentId}/`, {
+        method: "POST",
+        headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": getCSRFToken(),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ reason: reason })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCommentStatus(commentId, "rejected"); // Обновляем статус
+        } else {
+            console.error("Ошибка при отклонении комментария:", data.error);
+        }
+    })
+    .catch(error => console.error("Ошибка отклонения комментария:", error));
+}
+
+
+/**
+ * Настраивает обработчики кликов по категориям.
+ * Работает как при загрузке страницы, так и после динамической загрузки `categories.html`.
+ */
+function setupCategoryClickHandler() {
+    console.log("setupCategoryClickHandler вызван");
+
+    // Используем делегирование событий для корректной работы после загрузки `categories.html`
+    document.body.addEventListener("click", function(event) {
+        const category = event.target.closest(".category-link"); // Ищем ближайший элемент с классом `category-link`
+        if (!category) return; // Если кликнули не по категории, выходим
+
+        event.preventDefault(); // Предотвращаем стандартное поведение ссылки
+
+        const categorySlug = category.getAttribute("data-slug"); // Получаем slug категории
+        console.log(`Клик по категории: ${categorySlug}`); // Логируем клик
+
+        if (!categorySlug) {
+            console.error("Ошибка: у категории отсутствует `data-slug`.");
+            return;
+        }
+
+        const url = `/categories/${categorySlug}/articles/`; // Формируем URL запроса
+        console.log(`Формируем запрос по URL: ${url}`); // Логируем URL
+
+        // Загружаем статьи по категории через AJAX
+        fetch(url, {
+            method: "GET",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(response => {
+            console.log(`Ответ от сервера получен. Статус: ${response.status}`);
+            return response.text();
+        })
+        .then(html => {
+            document.querySelector(".main-box").innerHTML = html; // Обновляем `.main-box` новыми статьями
+            console.log("Статьи загружены в `.main-box`");
+        })
+        .catch(error => console.error("Ошибка загрузки категорий:", error));
+    });
+}
+
+// Подключаем обработчик при загрузке страницы
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Подключение `setupCategoryClickHandler()`...");
+    setupCategoryClickHandler();
+});
+
+
+/**
+ * Обрабатывает клик по категории.
+ * Загружает статьи в `.main-box` без перезагрузки страницы.
+ * @param {Event} event - Событие клика.
+ */
+function categoryClickHandler(event) {
+    event.preventDefault(); // Предотвращаем стандартный переход по ссылке
+
+    const categorySlug = this.getAttribute("data-slug"); // Получаем `slug` выбранной категории
+    console.log(`Клик по категории: ${categorySlug}`); // Логируем сам факт клика
+
+    if (!categorySlug) {
+        console.error("Ошибка: у категории отсутствует `data-slug`.");
+        return;
+    }
+
+    const url = `/categories/${categorySlug}/articles/`; // Формируем URL для AJAX-запроса
+    console.log(`Формируем запрос по URL: ${url}`); // Логируем URL, по которому отправится запрос
+
+    // Отправляем GET-запрос через AJAX с заголовком `X-Requested-With`
+    fetch(url, {
+        method: "GET",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(response => {
+        console.log(`Ответ от сервера получен. Статус: ${response.status}`);
+        return response.text();
+    })
+    .then(html => {
+        document.querySelector(".main-box").innerHTML = html; // Обновляем `.main-box` новыми статьями
+        setupCategoryClickHandler(); // Повторно подключаем обработчики кликов после обновления страницы
+        console.log("Статьи загружены в `.main-box`");
+    })
+    .catch(error => console.error("Ошибка загрузки категорий:", error)); // Логируем ошибку, если не удалось загрузить статьи
+}
+
+// Подключаем обработчик при загрузке страницы
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Подключение `setupCategoryClickHandler()`...");
+    setupCategoryClickHandler();
+});

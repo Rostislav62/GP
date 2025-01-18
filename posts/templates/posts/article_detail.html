@@ -32,21 +32,10 @@
 
 
     <!-- Полный текст статьи -->
-    <p>{{ article.content }}</p>
-
-    <!-- Медиафайл: изображение или видео -->
-    <div class="media-container">
-        {% if article.media_file %}
-            {% if media_type == 'image' %}
-                <img src="{{ article.media_file.url }}" alt="Article Media" class="article-media">
-            {% elif media_type == 'video' %}
-                <video src="{{ article.media_file.url }}" controls class="article-media"></video>
-            {% endif %}
-        {% endif %}
+    <div class="article-content">
+        {{ article.content|safe }}  <!-- Рендерим HTML-контент -->
     </div>
-    <div>
 
-    </div>
     <!-- Лайки, комментарии, просмотры -->
     <div>
         <button class="btn-views">👁️ Просмотры: {{ article.views_count }}</button>
@@ -59,27 +48,41 @@
     </div>
 
     {% if user.is_authenticated and user == article.author %}
+        <div class="article-actions">
     <!-- Кнопка "Редактировать" для автора поста -->
-    <button class="menu-item clickable edit-article"
-            data-article-id="{{ article.id }}"
-            data-url="{% url 'edit_ad' article.id %}">
-        Редактировать
-    </button>
+        <button class="menu-item clickable edit-article btn-edit"
+                data-article-id="{{ article.id }}"
+                data-url="{% url 'edit_ad' article.id %}">
+            ✏️ Редактировать
+        </button>
+        <!-- Кнопка "Удалить" -->
+        <button class="btn-delete clickable"
+                data-article-id="{{ article.id }}"
+                data-url="{% url 'delete_article' article.id %}"
+                onclick="confirmDelete(this)">
+            🗑️ Удалить
+        </button>
+
+        </div>
     {% endif %}
 
-
-    <!-- Последний комментарий -->
+    <!-- Последний одобренный комментарий -->
     {% if latest_comment %}
         <h3 id="latest-comment" class="comment-preview clickable" data-url="{% url 'all_comments' article.id %}">
-            Последний комментарий: <strong>{{ latest_comment.author.username }}</strong> -
+            Последний одобренный комментарий: <strong>{{ latest_comment.author.username }}</strong> -
             {{ latest_comment.updated_at|default:latest_comment.created_at|date:"d M Y H:i" }}
         </h3>
         <p class="clickable" data-url="{% url 'all_comments' article.id %}">
-            {{ latest_comment.content|truncatewords:15 }} <!-- Текст обрезается до 15 слов -->
+            {{ latest_comment.content|truncatewords:15 }}
         </p>
     {% else %}
-        <p>Комментариев пока нет.</p> <!-- Текст, отображаемый при отсутствии комментариев -->
+        <p>Пока нет одобренных комментариев.</p>
     {% endif %}
+
+<!-- Добавляем кнопку "Посмотреть все комментарии" для владельца статьи -->
+{% if user.is_authenticated and user == article.author %}
+    <p><a href="{% url 'all_comments' article.id %}">📄 Посмотреть все комментарии</a></p>
+{% endif %}
 
 
 

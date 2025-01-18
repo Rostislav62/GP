@@ -4,7 +4,6 @@
     <ul class="categories-list">
         {% for category in categories %}
             <li class="category-item">
-                <!-- Если есть иконка, отображаем её -->
                 {% if category.icon %}
                     <img src="{{ category.icon.url }}" alt="{{ category.name }}" class="category-icon">
                 {% endif %}
@@ -15,3 +14,4 @@
         {% endfor %}
     </ul>
 </div>
+

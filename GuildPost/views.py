@@ -30,3 +30,5 @@ def get_server_time(request):
             "error": "Не удалось получить время сервера",
             "details": str(e)
         }, status=500)
+
+

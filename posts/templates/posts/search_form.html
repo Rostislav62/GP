@@ -1,0 +1,44 @@
+<!-- Файл: /GuildPost/posts/templates/posts/search_form.html -->
+
+{% load static %}
+
+<form id="search-form" method="GET" action="/search/results/" class="search-form">
+    {% csrf_token %}
+
+    <!-- Поле для ввода автора -->
+    <div class="form-group">
+        <label for="author">Автор:</label>
+        <select name="author" id="author" class="form-control">
+            <option value="">Все</option>
+            {% for user in authors %}
+            <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Поле для ввода названия -->
+    <div class="form-group">
+        <label for="title">Название:</label>
+        <input type="text" name="title" id="title" class="form-control" placeholder="Введите название">
+    </div>
+
+    <!-- Поле для выбора даты публикации -->
+    <div class="form-group">
+        <label for="date_from">Дата публикации (с):</label>
+        <input type="date" name="date_from" id="date_from" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="date_to">Дата публикации (по):</label>
+        <input type="date" name="date_to" id="date_to" class="form-control">
+    </div>
+
+    <!-- Поле для поиска по содержимому -->
+    <div class="form-group">
+        <label for="content">Контент:</label>
+        <input type="text" name="content" id="content" class="form-control" placeholder="Введите текст статьи">
+    </div>
+
+    <!-- Кнопка отправки -->
+    <button type="submit" class="btn btn-primary">Поиск</button>
+</form>
